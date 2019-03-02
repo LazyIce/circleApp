@@ -1,7 +1,4 @@
-amplify/\#current-cloud-backend
-amplify/.config/local-*
-amplify/backend/amplify-meta.json
-amplify/backend/awscloudformation
+amplify/
 build/
 dist/
 node_modules/
