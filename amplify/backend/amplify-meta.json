@@ -1,35 +1,53 @@
 {
-	"providers": {
-		"awscloudformation": {
-			"AuthRoleName": "circlepp-20190301173015-authRole",
-			"UnauthRoleArn": "arn:aws:iam::397772462167:role/circlepp-20190301173015-unauthRole",
-			"AuthRoleArn": "arn:aws:iam::397772462167:role/circlepp-20190301173015-authRole",
-			"Region": "us-east-1",
-			"DeploymentBucketName": "circlepp-20190301173015-deployment",
-			"UnauthRoleName": "circlepp-20190301173015-unauthRole",
-			"StackName": "circlepp-20190301173015",
-			"StackId": "arn:aws:cloudformation:us-east-1:397772462167:stack/circlepp-20190301173015/95e90c40-3c71-11e9-989b-126514929126"
-		}
-	},
-	"auth": {
-		"cognito23061f2d": {
-			"service": "Cognito",
-			"providerPlugin": "awscloudformation",
-			"providerMetadata": {
-				"s3TemplateURL": "https://s3.amazonaws.com/circlepp-20190301173015-deployment/amplify-cfn-templates/auth/cognito23061f2d-cloudformation-template.yml",
-				"logicalId": "authcognito23061f2d"
-			},
-			"lastPushTimeStamp": "2019-03-01T22:35:27.030Z",
-			"output": {
-				"AppClientSecret": "1l8d8q1jl6ifnabiqg18k4rvmk4c63enn8nldqdopqvrdb23fvfs",
-				"UserPoolId": "us-east-1_k7Pe93q7E",
-				"AppClientIDWeb": "177798abkrk5s7h7kqtlhhd7sk",
-				"AppClientID": "p8mc12mt6097f2k0v7ungiud0",
-				"IdentityPoolId": "us-east-1:025dea08-bfd7-4401-ae8d-e295bb2319bc",
-				"IdentityPoolName": "cognito23061f2d_identitypool_23061f2d",
-				"UserPoolName": "cognito23061f2d_userpool_23061f2d"
-			},
-			"lastPushDirHash": "Wq9AbfIkiYHhDZn6lyzJ4UHtJ3Q="
-		}
-	}
+    "providers": {
+        "awscloudformation": {
+            "AuthRoleName": "circleapp-20190303201205-authRole",
+            "UnauthRoleArn": "arn:aws:iam::397772462167:role/circleapp-20190303201205-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::397772462167:role/circleapp-20190303201205-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "circleapp-20190303201205-deployment",
+            "UnauthRoleName": "circleapp-20190303201205-unauthRole",
+            "StackName": "circleapp-20190303201205",
+            "StackId": "arn:aws:cloudformation:us-east-1:397772462167:stack/circleapp-20190303201205/6b431120-3e1a-11e9-af97-0ec11b444504"
+        }
+    },
+    "auth": {
+        "cognito86b844e0": {
+            "service": "Cognito",
+            "providerPlugin": "awscloudformation",
+            "providerMetadata": {
+                "s3TemplateURL": "https://s3.amazonaws.com/circleapp-20190303201205-deployment/amplify-cfn-templates/auth/cognito86b844e0-cloudformation-template.yml",
+                "logicalId": "authcognito86b844e0"
+            },
+            "lastPushTimeStamp": "2019-03-04T01:59:39.864Z",
+            "output": {
+                "AppClientSecret": "m6t6vbpqsgjq137oeunltsqo23vh4le7mb9ni4ld7rhghckcudl",
+                "UserPoolId": "us-east-1_kxdQvtrks",
+                "AppClientIDWeb": "3t77p4ibe6u3oatrcbbc7djmt0",
+                "AppClientID": "eiveof9qhts9k89tv78eq6qfm",
+                "IdentityPoolId": "us-east-1:cbf1b35e-ad80-4e59-a5a0-c30a03234085",
+                "IdentityPoolName": "cognito86b844e0_identitypool_86b844e0__master",
+                "UserPoolName": "cognito86b844e0_userpool_86b844e0"
+            },
+            "lastPushDirHash": "A+oUqWQ0QAUxn/mYq0igPmiZ2T0="
+        }
+    },
+    "hosting": {
+        "S3AndCloudFront": {
+            "service": "S3AndCloudFront",
+            "providerPlugin": "awscloudformation",
+            "providerMetadata": {
+                "s3TemplateURL": "https://s3.amazonaws.com/circleapp-20190303201205-deployment/amplify-cfn-templates/hosting/template.json",
+                "logicalId": "hostingS3AndCloudFront"
+            },
+            "lastPushTimeStamp": "2019-03-04T01:59:39.783Z",
+            "output": {
+                "S3BucketSecureURL": "https://circlepp-20190303205627-hostingbucket-master.s3.amazonaws.com",
+                "WebsiteURL": "http://circlepp-20190303205627-hostingbucket-master.s3-website-us-east-1.amazonaws.com",
+                "Region": "us-east-1",
+                "HostingBucketName": "circlepp-20190303205627-hostingbucket-master"
+            },
+            "lastPushDirHash": "hQZ56LjZDnDSTkOp38MQVBPaLoM="
+        }
+    }
 }
