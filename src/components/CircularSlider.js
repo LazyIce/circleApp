@@ -50,8 +50,7 @@ export default class CircleSlider extends Component {
             this.backgroundTime = new Date().getTime()
         }
         if (this.state.appState === 'inactive' || this.state.appState === 'background' && nextAppState === 'active') {
-            this.backgroundTime = Math.round(new Date().getTime() / 1000 - this.backgroundTime * Math.pow(10, 0));
-            if (this.state.btnTitle === 'GiveUp' && this.backgroundTime > 5000) {
+            if (this.state.btnTitle === 'GiveUp' && Math.round(new Date().getTime() - this.backgroundTime) > 8000) {
                 this._timer&&clearInterval(this._timer);
                 Alert.alert('You failed!');
                 this.setState({btnTitle: 'Travel', starVal: 1, angle: this.props.startCoord, seconds: 0});

@@ -3,7 +3,7 @@
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerNgrokUrl": "https://rf-umf.bxie41.circleapp.exp.direct",
+  "packagerNgrokUrl": "https://packager.rf-umf.bxie41.circleapp.exp.direct",
+  "ngrokPid": 50924
 }
