@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     button: {
         width: BASE_WIDTH / 3,
         backgroundColor: '#FF9900',
-        marginTop: 40,
+        marginTop: 30,
     }
 })
 

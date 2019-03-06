@@ -3,7 +3,7 @@
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": "https://tj-t96.bxie41.circleapp.exp.direct",
-  "packagerNgrokUrl": "https://packager.tj-t96.bxie41.circleapp.exp.direct",
-  "ngrokPid": 47290
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null
 }
