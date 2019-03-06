@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { PanResponder, View, Text, Dimensions, Alert, StyleSheet, AppState } from 'react-native'
 import { Button, Avatar } from 'react-native-elements'
 import Svg, { Path, Circle, G, Defs, LinearGradient, Stop} from 'react-native-svg'
+import {building} from './../img_path'
 
 const BASE_WIDTH = Dimensions.get('window').width
 const BASE_HEIGHT = Dimensions.get('window').height - 25
@@ -158,10 +159,7 @@ export default class CircleSlider extends Component {
                 <Avatar
                     size={214}
                     rounded
-                    source={{
-                        uri:
-                          'https://s3.amazonaws.com/circlepp-20190301164934-deployment/building.jpeg',
-                    }}
+                    source={building}
                     containerStyle={{position: 'absolute', top: 33}}
                 />
                 <Svg onLayout={this.doStuff} ref="circleslider" width={width} height={width}>
