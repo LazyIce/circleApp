@@ -1,15 +1,22 @@
-import React, {Component} from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, {Component} from 'react'
+import { StyleSheet, View, Demensions} from 'react-native'
+import TimerScreen from './src/components/TimerScreen'
 
-import Amplify from '@aws-amplify/core'
-import config from './aws-exports'
-Amplify.configure(config)
+// const STATUS_BAR_HEIGHT = 20
+// const BASE_WIDTH = Demensions.get('window').width
+// const BASE_HIGHT = Demensions.get('window').height - STATUS_BAR_HEIGHT
 
 class App extends Component {
+  // constructor() {
+  //   this.state = {
+  //     width: BASE_WIDTH,
+  //     height: BASE_HIGHT
+  //   }
+  // }
   render() {
     return (
       <View style={styles.container}>
-        Hello world.
+        <TimerScreen />
       </View>
     );
   }

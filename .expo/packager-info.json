@@ -1,9 +1,9 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 26252,
-  "expoServerNgrokUrl": "https://tj-t96.anonymous.circleapp.exp.direct",
-  "packagerNgrokUrl": "https://packager.tj-t96.anonymous.circleapp.exp.direct",
-  "ngrokPid": 26272
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": "https://tj-t96.bxie41.circleapp.exp.direct",
+  "packagerNgrokUrl": "https://packager.tj-t96.bxie41.circleapp.exp.direct",
+  "ngrokPid": 33708
 }
