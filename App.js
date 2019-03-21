@@ -1,10 +1,9 @@
 import React, {Component} from 'react'
 import { StyleSheet, View, Demensions} from 'react-native'
-import TimerScreen from './src/components/TimerScreen'
+import TimerScreen from './src/screens/TimerScreen'
 
 import Amplify, { Auth } from 'aws-amplify'
 import awsmobile from './aws-exports'
-import {withAuthenticator} from 'aws-amplify-react-native'
 Amplify.configure(awsmobile)
 
 // const STATUS_BAR_HEIGHT = 20
@@ -27,7 +26,7 @@ class App extends Component {
   }
 }
 
-export default withAuthenticator(App)
+export default App
 
 const styles = StyleSheet.create({
   container: {
