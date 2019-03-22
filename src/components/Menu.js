@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, TouchableOpacity, View} from 'react-native'
+import { StyleSheet, TouchableOpacity, Text, View} from 'react-native'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
 
@@ -15,7 +15,7 @@ export default class Menu extends Component {
                         <Text style={styles.menuText}>Home</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={ styles.menu }>
-                        <Icon name='user-o' color={colors.txtWhite} size={24} />
+                        <Icon name='user-o' color='#fff' size={24} />
                         <Text style={styles.menuText}>Profile</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={ styles.menu }>

@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import { PanResponder, View, Text, Dimensions, Alert, StyleSheet, AppState } from 'react-native'
 import { Button, Avatar } from 'react-native-elements'
 import Svg, { Path, Circle, G, Defs, LinearGradient, Stop} from 'react-native-svg'
+import FAIcon from 'react-native-vector-icons/FontAwesome'
 import {building} from './../img_path'
 
+const STATUS_BAR = 25
 const BASE_WIDTH = Dimensions.get('window').width
-const BASE_HEIGHT = Dimensions.get('window').height - 25
+const BASE_HEIGHT = Dimensions.get('window').height - STATUS_BAR
 
 export default class CircleSlider extends Component {
     constructor(props) {
@@ -198,7 +200,8 @@ export default class CircleSlider extends Component {
                     {this.props.onValueChange(this.state.angle)}:{this.state.seconds < 10 ? '0' + this.state.seconds : this.state.seconds}
                 </Text>
                 <Text style={styles.starText}>
-                    You will get {Math.round(this.state.starVal)} stars
+                    You will get {Math.round(this.state.starVal) + ' '}
+                    <FAIcon name='star' size={18} color={'#FFFF00'} />
                 </Text>
                 <Button buttonStyle={styles.button} color='#FFFFFF' title={this.state.btnTitle} onPress={this.countTime.bind(this)} />
             </View>
@@ -217,7 +220,7 @@ const styles = StyleSheet.create({
         color: '#FFFFFF'
     },
     starText: {
-        fontSize: 22,
+        fontSize: 20,
         color: '#FFFFFF'
     },
     button: {

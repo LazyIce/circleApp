@@ -13,7 +13,8 @@ class TimerScreen extends Component {
         this.state = {
             city: 'Atlanta',
             cityCompleting: '232',
-            cityCompleted: '30k'
+            cityCompleted: '30k',
+            star: 200
         }
     }
 
@@ -26,8 +27,13 @@ class TimerScreen extends Component {
             <View style={styles.container}>
                 <View style={styles.navBar}>
                     <TouchableOpacity onPress={ this.props.onMenuPress }>
-                        <FAIcon name='bars' size={22} style={{ color: '#FFF' }} />
+                        <FAIcon name='bars' size={30} color={'#FFF'} />
                     </TouchableOpacity>
+                    <Text style={styles.starText}>
+                        {this.state.star + ' '}
+                        <FAIcon name='star' size={18} color={'#FFFF00'} />
+                    </Text>
+                    <Text>{'     '}</Text>
                 </View>
                 <View style={styles.cityContainer}>
                     <Text style={styles.cityText}>{this.state.city}</Text>
@@ -48,12 +54,28 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFAC31'
     },
     navBar: {
-        marginTop: STATUS_BAR
+        marginTop: STATUS_BAR,
+        height: BASE_HEIGHT / 10,
+        paddingLeft: 25,
+        paddingRight: 25,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    starText: {
+        color: '#FFF', 
+        height: 25,
+        fontSize: 18,
+        backgroundColor: '#FFD700',
+        paddingTop: 2,
+        paddingLeft: 25,
+        paddingRight: 25,
+        borderRadius: 10,
+        overflow: 'hidden'
     },
     cityContainer: {
-        marginTop: STATUS_BAR,
         width: BASE_WIDTH,
-        height: BASE_HEIGHT / 5,
+        height: BASE_HEIGHT / 8,
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -67,7 +89,7 @@ const styles = StyleSheet.create({
     },
     sliderContainer: {
         width: BASE_WIDTH,
-        height: BASE_HEIGHT / 5 * 4,
+        height: BASE_HEIGHT - BASE_HEIGHT / 8 - BASE_HEIGHT / 10,
         alignItems: 'center',
         justifyContent: 'center'
     }
