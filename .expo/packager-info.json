@@ -1,9 +1,9 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": "https://rf-umf.bxie41.circleapp.exp.direct",
-  "packagerNgrokUrl": "https://packager.rf-umf.bxie41.circleapp.exp.direct",
-  "ngrokPid": 61884
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 76691,
+  "expoServerNgrokUrl": "https://jj-tip.bxie41.circleapp.exp.direct",
+  "packagerNgrokUrl": "https://packager.jj-tip.bxie41.circleapp.exp.direct",
+  "ngrokPid": 76705
 }

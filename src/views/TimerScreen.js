@@ -18,15 +18,11 @@ class TimerScreen extends Component {
         }
     }
 
-    onPressMenu() {
-        this.props.navigation.navigate('DrawerOpen')
-    }
-
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.navBar}>
-                    <TouchableOpacity onPress={ this.props.onMenuPress }>
+                    <TouchableOpacity>
                         <FAIcon name='bars' size={30} color={'#FFF'} />
                     </TouchableOpacity>
                     <Text style={styles.starText}>

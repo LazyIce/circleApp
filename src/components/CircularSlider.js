@@ -3,13 +3,13 @@ import { PanResponder, View, Text, Dimensions, Alert, StyleSheet, AppState } fro
 import { Button, Avatar } from 'react-native-elements'
 import Svg, { Path, Circle, G, Defs, LinearGradient, Stop} from 'react-native-svg'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
-import {building} from './../img_path'
+import { building } from './../img_path'
 
 const STATUS_BAR = 25
 const BASE_WIDTH = Dimensions.get('window').width
 const BASE_HEIGHT = Dimensions.get('window').height - STATUS_BAR
 
-export default class CircleSlider extends Component {
+class CircleSlider extends Component {
     constructor(props) {
         super(props);
 
@@ -244,3 +244,5 @@ CircleSlider.defaultProps = {
     startCoord: 1,
     onValueChange: x => x
 }
+
+export default CircleSlider

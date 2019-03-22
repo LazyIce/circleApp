@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet} from 'react-native'
+import { View, Text, StyleSheet} from 'react-native-elements'
 
-class AchievementScreen extends Component {
+class CityScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text>Achievement</Text>
+                <Text>City</Text>
             </View>
         );
     }
@@ -19,4 +19,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default AchievementScreen
+export default CityScreen
