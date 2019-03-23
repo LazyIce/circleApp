@@ -3,7 +3,7 @@ import TimerScreen from './../views/TimerScreen'
 
 const stackNav = createStackNavigator(
     {
-        Home : {
+        Timer : {
             screen: TimerScreen
         },
     },{

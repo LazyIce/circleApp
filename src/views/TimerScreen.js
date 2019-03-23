@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity, StatusBar } from 'react-native'
+import { View, Text, StyleSheet, Dimensions } from 'react-native'
+import TimerHeader from './../components/TimerHeader'
 import CircularSlider from './../components/CircularSlider'
-import FAIcon from 'react-native-vector-icons/FontAwesome'
 
-const STATUS_BAR = 25
 const BASE_WIDTH = Dimensions.get('window').width
 const BASE_HEIGHT = Dimensions.get('window').height
 
@@ -13,24 +12,14 @@ class TimerScreen extends Component {
         this.state = {
             city: 'Atlanta',
             cityCompleting: '232',
-            cityCompleted: '30k',
-            star: 200
+            cityCompleted: '30k'
         }
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.navBar}>
-                    <TouchableOpacity>
-                        <FAIcon name='bars' size={30} color={'#FFF'} />
-                    </TouchableOpacity>
-                    <Text style={styles.starText}>
-                        {this.state.star + ' '}
-                        <FAIcon name='star' size={18} color={'#FFFF00'} />
-                    </Text>
-                    <Text>{'     '}</Text>
-                </View>
+                <TimerHeader {...this.props} />
                 <View style={styles.cityContainer}>
                     <Text style={styles.cityText}>{this.state.city}</Text>
                     <Text style={styles.completeText}>{this.state.cityCompleting}/{this.state.cityCompleted} charity goal</Text>
@@ -48,26 +37,6 @@ const styles = StyleSheet.create({
         width: BASE_WIDTH,
         height: BASE_HEIGHT,
         backgroundColor: '#FFAC31'
-    },
-    navBar: {
-        marginTop: STATUS_BAR,
-        height: BASE_HEIGHT / 10,
-        paddingLeft: 25,
-        paddingRight: 25,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    starText: {
-        color: '#FFF', 
-        height: 25,
-        fontSize: 18,
-        backgroundColor: '#FFD700',
-        paddingTop: 2,
-        paddingLeft: 25,
-        paddingRight: 25,
-        borderRadius: 10,
-        overflow: 'hidden'
     },
     cityContainer: {
         width: BASE_WIDTH,

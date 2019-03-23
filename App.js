@@ -55,7 +55,7 @@ let drawerNavigatorConfigs = {
 	drawerBackgroundColor: 'orange',
 	contentComponent: SideMenu,
 	contentOptions: {
-		activeTintColor: 'red'
+		activeTintColor: 'orange'
 	}
 }
 
