@@ -20,7 +20,7 @@ class SideMenu extends Component {
                 </TouchableOpacity>
                 <TouchableOpacity style={ styles.menu } onPress={this.navigateToScreen('City')}>
                     <Icon name='globe' color='#fff' size={24} />
-                    <Text style={styles.menuText}>City</Text>
+                    <Text style={styles.menuText}>My journey</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={ styles.menu } onPress={this.navigateToScreen('Timeline')}>
                     <Icon name='list-alt' color='#fff' size={24} />

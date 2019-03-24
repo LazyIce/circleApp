@@ -1,3 +1,3 @@
-let building = require('./../assets/building.jpg')
+let building = require('./../assets/building.png')
 
 export {building}
