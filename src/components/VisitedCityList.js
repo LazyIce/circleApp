@@ -10,6 +10,10 @@ class VisitedCityList extends Component {
             // cities are an array of cities; the format of city: {name: , totalCharityGoal: , curCharityGoal: , pic: , subTitle: , description: , postcards: []}
             cities: props.cities || [],
         }
+        this.locateCallback = props.locateCallback
+    }
+    onLocateClik = (e, city) => {
+        this.locateCallback(e, city)
     }
 
     render() {
@@ -20,8 +24,8 @@ class VisitedCityList extends Component {
                         <Card containerStyle={[styles.container, { borderRadius: '3px' }]}>
                             <View>
                                 <Image
-                                    style={{ width: '100%', height: 150 }}
-                                    source={{ uri: city.pic }}
+                                    style={{ width: '100%', height: 150, borderRadius: 10}}
+                                    source={city.pic}
                                 ></Image>
                             </View>
                             <View style={styles.container}>
@@ -40,16 +44,16 @@ class VisitedCityList extends Component {
                                 </View>
                              }
                              {city.postcards &&
-                                <View style={styles.rowContainer}>
+                                <View style={[styles.rowContainer, {flexWrap: 'wrap'}]}>
                                     {city.postcards.map((postcard) => (
                                         <Image
-                                            style={{ width: 80, height: 80 }}
-                                            source={{ uri: postcard }}
+                                            style={{ width: '20%', aspectRatio: 1, borderRadius: 5, margin: '2%' }}
+                                            source={postcard}
                                         ></Image>
                                     ))
                                     }
                                 <View style={[styles.rowContainer]}>
-                                    <Button onPress={this.onLocateClik} titleStyle={[styles.textStyle, { fontSize: '14px', color: colors.cityButton, }]} title='LOCATE' type='clear'></Button>
+                                    <Button onPress={(e) => this.onLocateClik(e, city)} titleStyle={[styles.textStyle, { fontSize: '14px', color: colors.cityButton, }]} title='LOCATE' type='clear'></Button>
                                 </View>
                                 </View>
                             }

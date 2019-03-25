@@ -6,12 +6,12 @@ import SideMenu from './src/components/SideMenu'
 import AccountScreen from './src/views/AccountScreen'
 import AchievementScreen from './src/views/AchievementScreen'
 import FriendScreen from './src/views/FriendScreen'
-import TimelineScreen from './src/views/TimelineScreen'
 import CharityScreen from './src/views/CharityScreen'
-import CityScreen from './src/views/CityScreen'
+import JourneyScreen from './src/views/JourneyScreen'
+import StatisticScreen from './src/views/StatisticScreen'
 
-import Amplify, { Auth } from 'aws-amplify'
-import awsmobile from './aws-exports'
+import Amplify, { API } from 'aws-amplify'
+import awsmobile from './src/aws-exports'
 Amplify.configure(awsmobile)
 
 export default class App extends Component {
@@ -29,8 +29,8 @@ let routeConfigs = {
 	Account: {
 		screen: AccountScreen
 	},
-	City: {
-		screen: CityScreen
+	Journey: {
+		screen: JourneyScreen
 	},
 	Achievement: {
 		screen: AchievementScreen
@@ -38,14 +38,13 @@ let routeConfigs = {
 	Friend: {
 		screen: FriendScreen
 	},
-	Timeline: {
-		screen: TimelineScreen
+	Statistics: {
+		screen: StatisticScreen
 	},
 	Charity: {
 		screen: CharityScreen
 	}
 }
-
 let drawerNavigatorConfigs = {
 	drawerWidth: Dimensions.get('window').width / 2,
 	drawerPosition: 'left',

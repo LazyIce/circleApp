@@ -37,3 +37,10 @@ export const objToQueryString = (obj) => {
 
     return keyValuePairs.join('&')
 }
+
+export const defaultMapRegion = {
+    latitude: 37.0902,
+    longitude: -95.7129,
+    latitudeDelta: 20.0,
+    longitudeDelta: 45.0,
+}

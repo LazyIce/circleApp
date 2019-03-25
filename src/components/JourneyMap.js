@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import MapView, { Marker, Polygon } from 'react-native-maps'
 import { colors, objToQueryString } from './../Constants'
-import NewCityList from './NewCityList';
+import { defaultMapRegion } from './../Constants'
 
 class JourneyMap extends Component {
     constructor(props) {
@@ -16,7 +16,7 @@ class JourneyMap extends Component {
                 right: props.right || 0,
                 bottom: props.bottom || 0,
             },
-            region: this.getScreenRegion(),
+            region: props.region || this.getScreenRegion(),
             /**
              * location format: {woe_id:, state: , name: , starNeeded: , borderCoordinates: (adding by request),}
              * place_id: the key to fetch the city border from the flickr server
@@ -27,7 +27,7 @@ class JourneyMap extends Component {
              * 3. AFFORDABLE: the city that is not visited but can be unlocked
              * 4. NOT_AFFORDABLE: not in all categories above
              */
-            locations: props.locations || [{woe_id: '2489314', state: 'CURRENT_CITY',name: 'Atlanta', starNeed: '220'}],
+            locations: props.locations || [],
             locationDetails: undefined
         }
 
@@ -38,12 +38,7 @@ class JourneyMap extends Component {
       let left = 180, right = -180, top = -90, bottom = 90
       // if there is no marker, just display the american map
       if (!Array.isArray(locations) || !locations.length) {
-          return {
-              latitude: 37.0902,
-              longitude: -95.7129,
-              latitudeDelta: 20.0,
-              longitudeDelta: 45.0,
-          }
+          return defaultMapRegion
       }
 
       // boundary of the markers

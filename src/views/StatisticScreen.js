@@ -1,15 +1,18 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import { ButtonGroup, Header } from 'react-native-elements';
+import { API } from 'aws-amplify'
 import VisitedMap from './../components/VisitedMap'
 import CharityGoalList from './../components/CharityGoalList'
 import TimeChart from './../components/TimeChart'
 import { colors } from './../Constants';
+import MyHeader from './../components/MyHeader'
 
 class StatisticScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            title: 'Statistics',
             selectedIndex: 1,
             totalTime: '3h 20m',
             subTitile: '1h above average',
@@ -21,18 +24,22 @@ class StatisticScreen extends Component {
         this.setState({selectedIndex})
     }
 
+    componentDidMount() {
+        let apiName = 'circleApp'
+        let path = '/statistics/today'
+        API.get(apiName, path).then(response => {
+            console.log(response)
+        }).catch(error => {
+            console.log(error)
+        });
+    }
+
     render() {
         const timePeriods = ['All Time', 'Today', 'This Week', 'This Month']
         const { selectedIndex } = this.state
         return (
             <View style={styles.container}>
-                <Header
-                    leftComponent={{ icon: 'close', color: colors.black }}
-                    centerComponent={{ text: 'Statistics',
-                        style: [styles.overviewText,{ color: colors.black, fontSize: '14px' }]
-                    }}
-                    containerStyle={{backgroundColor: colors.white}}
-                />
+                <MyHeader {...this.props} title={this.state.title} />
                 <ButtonGroup
                     onPress={this.updateTimePeriod}
                     selectedIndex={selectedIndex}
@@ -41,12 +48,12 @@ class StatisticScreen extends Component {
                     selectedButtonStyle={{backgroundColor: colors.purple}}
                     textStyle={[styles.overviewText, {fontSize: '14px'}]}/>
                 <ScrollView style={{flex: 1, marginBottom: 20}}>
-                    <View style={[styles.container, styles.overviewSection, {height: 420, marginTop: 10}]}>
+                    <View style={[styles.container, styles.overviewSection, {height: 220, marginTop: 10}]}>
                         <Text style={[styles.overviewText, styles.overviewSectionTitle]}>
                             {'Places You\'ve Visited'}
                         </Text>
                         <View style={styles.container}>
-                            <VisitedMap markers={[{ latitude: 37.78825, longitude: -122.4324 }]} />
+                            <VisitedMap markers={[{ latitude: 33.748997, longitude: -84.387985 }]} />
                         </View>
                     </View>
 
