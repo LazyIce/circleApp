@@ -8,14 +8,17 @@ class CharityGoalList extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            allData: props.data,
-            displayData: this.getInitialDisplayItems(props.data),
+            allData: props.data || [],
+            displayData: CharityGoalList.getInitialDisplayItems(props.data) || [],
         }
     }
 
-    getInitialDisplayItems(data) {
-        this.initialDisplayNum = 2
-        return data.slice(0, this.initialDisplayNum)
+    static getInitialDisplayItems(data) {
+        if (!data) {
+            return undefined
+        }
+        const initialDisplayNum = 2
+        return data.slice(0, initialDisplayNum)
     }
 
     _keyExtractor = (item, index) => item.id;
@@ -40,33 +43,51 @@ class CharityGoalList extends Component {
     }
 
     _onPressViewAll = () => {
-        this.setState((state, props) => ({
-            displayData: state.allData
-        }))
+        console.log('_onPressViewAll')
+        let newDisplayData = this.state.allData
+        this.setState({
+            displayData: newDisplayData
+        })
+    }
+
+    static getDerivedStateFromProps = (props, state) => {
+        if(props.data != state.allData) {
+            return {
+                allData: props.data || [],
+                displayData: CharityGoalList.getInitialDisplayItems(props.data) || []
+            }
+        }
+        return null
     }
 
     render() {
         return (
             <View>
-                <View>
-                    <FlatList
-                        style={{ width: '100%' }}
-                        data={this.state.displayData}
-                        keyExtractor={this._keyExtractor}
-                        renderItem={this._renderItem}
-                        ItemSeparatorComponent={this.renderSeparator}
-                        ListHeaderComponent={this.renderSeparator}
-                        ListFooterComponent={this.renderSeparator}
-                    />
-                </View>
-
-                {
+                {this.state.displayData.length === 0 &&
+                    <Text>No charity goals to display </Text>
+                }
+                {this.state.displayData.length !== 0 &&
+                    <View>
+                        <FlatList
+                            style={{ width: '100%' }}
+                            data={this.state.displayData}
+                            keyExtractor={this._keyExtractor}
+                            renderItem={this._renderItem}
+                            ItemSeparatorComponent={this.renderSeparator}
+                            ListHeaderComponent={this.renderSeparator}
+                            ListFooterComponent={this.renderSeparator}
+                        />
+                    </View>
+                }
+                {this.state.displayData.length !== 0 &&
                     this.state.displayData.length < this.state.allData.length &&
-                    <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', height: 16, marginTop: 4 }} onPress={this._onPressViewAll}>
-                        <Text style={{ color: colors.gray, fontFamily: 'Roboto', fontSize: '13px', marginRight: 8 }}>{'View All'}</Text>
+                    <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', height: 16, marginTop: 4 }}
+                    onPress={() => this._onPressViewAll()}>
+                        <Text style={{ color: colors.gray, fontSize: 13, marginRight: 8 }}>{'View All'}</Text>
                         <Icon name='angle-down' size={18} color={colors.gray} />
                     </TouchableOpacity>
                 }
+
             </View>
 
         )
@@ -120,17 +141,15 @@ const styles = StyleSheet.create({
         paddingVertical: 22,
     },
     cityTitle: {
-        fontFamily: 'Roboto',
         fontStyle: 'normal',
-        fontSize: '17px',
+        fontSize: 17,
         fontWeight: '500',
         color: colors.black,
         marginRight: 8,
         marginLeft: 8,
     },
     cityBadgeText: {
-        fontFamily: 'Roboto',
-        fontSize: '12px',
+        fontSize: 12,
         color: colors.gray,
         marginLeft: 19,
         marginRight: 19,
@@ -144,8 +163,7 @@ const styles = StyleSheet.create({
         marginRight: 8,
     },
     viewDetailText: {
-        fontFamily: 'Roboto',
-        fontSize: '13px',
+        fontSize: 13,
         color: colors.gray,
         marginRight: 19,
     },

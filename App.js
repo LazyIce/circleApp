@@ -11,16 +11,19 @@ import JourneyScreen from './src/views/JourneyScreen'
 import StatisticScreen from './src/views/StatisticScreen'
 
 import Amplify, { API } from 'aws-amplify'
-import awsmobile from './aws-exports'
+import awsmobile from './src/aws-exports'
+import { withAuthenticator } from 'aws-amplify-react-native';
 Amplify.configure(awsmobile)
 
-export default class App extends Component {
+class App extends Component {
 	render() {
 		return (
 			<AppContainer />
 		);
 	}
 }
+
+export default withAuthenticator(App)
 
 let routeConfigs = {
 	Home: {

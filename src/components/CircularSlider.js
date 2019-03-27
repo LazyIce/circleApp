@@ -3,6 +3,7 @@ import { PanResponder, View, Text, Dimensions, Alert, StyleSheet, AppState, Shar
 import { Button, Avatar } from 'react-native-elements'
 import Svg, { Path, Circle, G, Defs, LinearGradient, Stop} from 'react-native-svg'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { API } from 'aws-amplify'
 import { building } from './../img_path'
 import { Constants } from 'expo'
 
@@ -24,6 +25,8 @@ class CircleSlider extends Component {
             appstate: AppState.currentState,
             hideSlider: false
         };
+
+        this.timerSucceedCallback = props.timerSucceedCallback
     }
 
     componentDidMount() {
@@ -101,15 +104,20 @@ class CircleSlider extends Component {
 
     get_minutes() {
         let mt = this.state.angle;
-        if (mt > 0) { 
-            mt--; 
+        if (mt > 0) {
+            mt--;
             this.setState({angle: mt});
-            return 1; 
+            return 1;
         }
-        else if (mt == 0) { 
+        else if (mt == 0) {
             this.setState({angle: 0});
             return 0;
         }
+    }
+
+    // called when user finish one timer successfully
+    timerSucceed = () => {
+        this.timerSucceedCallback(this.state.starVal)
     }
 
     countTime() {
@@ -117,19 +125,20 @@ class CircleSlider extends Component {
             this.setState({btnTitle: 'GiveUp', hideSlider: true});
             this._timer=setInterval(()=>{
                 let ct = this.state.seconds;
-                if (ct > 0) { 
+                if (ct > 0) {
                   ct--;
                   this.setState({seconds:ct});
                 }
-                else if (ct == 0) { 
+                else if (ct == 0) {
                   var get_mt = this.get_minutes();
-                  if (get_mt == 1) { 
+                  if (get_mt == 1) {
                     ct = 59;
-                    this.setState({seconds:ct}); 
+                    this.setState({seconds:ct});
                   }
                   else if (get_mt == 0) {
                     this._timer&&clearInterval(this._timer);
                     this.setState({btnTitle: 'Share', starVal: 1, angle: this.props.startCoord});
+                    this.timerSucceed();
                   }
                 }
             }, 1000);
@@ -149,7 +158,7 @@ class CircleSlider extends Component {
             this.setState({btnTitle: 'Travel', hideSlider: false, starVal: 1, angle: this.props.startCoord, seconds: 0});
         } else {
             this._shareText()
-        } 
+        }
     }
 
     _shareText() {
@@ -165,7 +174,7 @@ class CircleSlider extends Component {
         .then(this._showResult)
         .catch((error) => this.setState({result: 'error: ' + error.message}));
     }
-    
+
     _showResult(result) {
         if (result.action === Share.sharedAction) {
             if (result.activityType) {
@@ -268,7 +277,7 @@ class CircleSlider extends Component {
                 </Svg>
                 {this.renderSwitch()}
                 <View style={styles.btnContainer}>
-                    {   
+                    {
                         this.state.btnTitle === 'Share' ?
                         <Button buttonStyle={styles.button} titleStyle={styles.btnFont} title='Restart' onPress={ () => this.setState({btnTitle: 'Travel', hideSlider: false, starVal: 1, angle: this.props.startCoord, seconds: 0})} /> :
                         null

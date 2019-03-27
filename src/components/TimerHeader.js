@@ -3,6 +3,7 @@ import { Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { Header } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { DrawerActions } from 'react-navigation'
+import { API } from 'aws-amplify'
 
 class TimerHeader extends Component {
     constructor(props) {
@@ -20,6 +21,7 @@ class TimerHeader extends Component {
     }
 
     renderCenterComponenet() {
+        const star = this.props.star || 0
         return (
             <Text style={styles.starText}>
                 {this.props.star + ' '}
@@ -30,7 +32,7 @@ class TimerHeader extends Component {
 
     render() {
         return (
-            <Header 
+            <Header
                 leftComponent={ this.renderLeftComponenent() }
                 centerComponent={ this.renderCenterComponenet() }
                 containerStyle={styles.container}

@@ -14,28 +14,42 @@ class StatisticScreen extends Component {
         this.state = {
             title: 'Statistics',
             selectedIndex: 1,
-            totalTime: '3h 20m',
-            subTitile: '1h above average',
+            chartDescription: {
+                totalTime: ' ',
+                subTitile: ' ',
+            },
+            map: {},
+            chartData: {},
+            charityGoals: {},
         }
-        this.updateTimePeriod = this.updateTimePeriod.bind(this)
+        this.timePeriods = ['All Time', 'Today', 'This Week', 'This Month']
+        this.inited = false
     }
 
-    updateTimePeriod(selectedIndex) {
-        this.setState({selectedIndex})
-    }
-
-    componentDidMount() {
+    fetchData = (selectedIndex) => {
+        const paths = ['allTime', 'today', 'weekly', 'monthly']
         let apiName = 'circleApp'
-        let path = '/statistics/today'
-        API.get(apiName, path).then(response => {
-            console.log(response)
-        }).catch(error => {
-            console.log(error)
-        });
+        let path = '/statistics/' + paths[selectedIndex]
+        if(!this.inited || selectedIndex !== this.state.selectedIndex) {
+            API.get(apiName, path).then(response => {
+                this.inited = true
+                response.selectedIndex = selectedIndex
+                this.setState(response)
+            }).catch(error => {
+                console.log(error)
+            })
+        }
+    }
+
+    updateTimePeriod = (selectedIndex) => {
+        this.fetchData(selectedIndex)
+    }
+
+    componentDidMount = () => {
+        this.fetchData(this.state.selectedIndex)
     }
 
     render() {
-        const timePeriods = ['All Time', 'Today', 'This Week', 'This Month']
         const { selectedIndex } = this.state
         return (
             <View style={styles.container}>
@@ -43,17 +57,17 @@ class StatisticScreen extends Component {
                 <ButtonGroup
                     onPress={this.updateTimePeriod}
                     selectedIndex={selectedIndex}
-                    buttons={timePeriods}
+                    buttons={this.timePeriods}
                     containerStyle={{height: 35}}
                     selectedButtonStyle={{backgroundColor: colors.purple}}
-                    textStyle={[styles.overviewText, {fontSize: '14px'}]}/>
+                    textStyle={[styles.overviewText, {fontSize: 14}]}/>
                 <ScrollView style={{flex: 1, marginBottom: 20}}>
                     <View style={[styles.container, styles.overviewSection, {height: 220, marginTop: 10}]}>
                         <Text style={[styles.overviewText, styles.overviewSectionTitle]}>
                             {'Places You\'ve Visited'}
                         </Text>
                         <View style={styles.container}>
-                            <VisitedMap markers={[{ latitude: 33.748997, longitude: -84.387985 }]} />
+                            <VisitedMap {...this.state.map}/>
                         </View>
                     </View>
 
@@ -61,24 +75,16 @@ class StatisticScreen extends Component {
                         <Text style={[styles.overviewText, styles.overviewSectionTitle]}>{'Time You\'ve Stayed Off Your Phone'}</Text>
                         <View style={{ height: 1, width: '100%', backgroundColor: colors.charityListBorder }} />
                         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', marginTop: 10, marginBottom: 6}}>
-                            <Text style={[styles.overviewText, { fontSize: '17px', marginRight: 12 }]}>{this.state.totalTime}</Text>
-                            <Text style={[styles.overviewText, { fontSize: '12px', color: colors.green }]}>{this.state.subTitile}</Text>
+                            <Text style={[styles.overviewText, { fontSize: 17, marginRight: 12 }]}>{this.state.chartDescription.totalTime}</Text>
+                            <Text style={[styles.overviewText, { fontSize: 12, color: colors.green }]}>{this.state.chartDescription.subTitile}</Text>
                         </View>
                         <View style={{ justifyContent: 'center' }}>
-                            <TimeChart />
+                            <TimeChart {...this.state.chartData}/>
                         </View>
                     </View>
                     <View style={[styles.container, styles.overviewSection]}>
                         <Text style={[styles.overviewText, styles.overviewSectionTitle]}>{'Charity Goals You\'ve Participated'}</Text>
-                        <CharityGoalList
-                            data={[{ id: 'a', title: 'Atlanta', goalState: 'Completed' },
-                            { id: 'a', title: 'Atlanta', goalState: 'Completed' },
-                            { id: 'a', title: 'Atlanta', goalState: 'In Progress' },
-                            { id: 'a', title: 'Atlanta', goalState: 'In Progress' },
-                            { id: 'a', title: 'Atlanta', goalState: 'In Progress' },
-                            { id: 'a', title: 'Atlanta', goalState: 'In Progress' },
-                            { id: 'a', title: 'Atlanta', goalState: 'In Progress' }]}
-                        />
+                        <CharityGoalList {...this.state.charityGoals}/>
                     </View>
 
                 </ScrollView>
@@ -95,11 +101,10 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     overviewText: {
-        fontFamily: 'Roboto',
         fontWeight: '500',
     },
     overviewSectionTitle: {
-        fontSize: '15px',
+        fontSize: 15,
         color: colors.black,
         marginBottom: 7
     },
@@ -107,7 +112,7 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: 20,
         justifyContent: 'flex-start',
-        flexDirection: 'clolum',
+        flexDirection: 'column',
         width: '100%',
         paddingLeft: '3%',
         paddingRight: '3%',
