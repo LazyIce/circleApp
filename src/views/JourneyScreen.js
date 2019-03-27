@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native'
 import { Header, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome'
+import Amplify, { API } from 'aws-amplify'
 import { colors, defaultMapRegion } from './../Constants'
 import JourneyMap from './../components/JourneyMap';
 import { TabView, SceneMap } from 'react-native-tab-view';
@@ -9,89 +10,100 @@ import NewCityList from './../components/NewCityList'
 import VisitedCityList from './../components/VisitedCityList'
 import CharityList from './../components/CharityList'
 import MyHeader from './../components/MyHeader'
-import { rectBuilding } from './../img_path'
+import { getScreenRegion } from './../Constants'
+import { DeviceEventEmitter } from 'react-native'
 
 class JourneyScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
             title: 'Journey',
-            startCount: 240,
-            newCityCount: props.newCityCount || 3,
-            visitedCityCount: props.visitedCityCount || 5,
-            charityCount: props.charityCount || 2,
             index: 0,
             routes: [
                 { key: 'first', title: 'NEW CITY 3' },
                 { key: 'second', title: 'VISITED 5' },
                 { key: 'third', title: 'CHARITY 2' },
             ],
+            startCount: 0,
+            // the states for the display of tab titles
+            tabTitles: {
+                newCityCount: 0,
+                visitedCityCount: 0,
+                charityCount: 0,
+            },
+            // the states for the display of map
+            map: {},
+            // the states for the display of new cities
+            newCities: {},
+            // the states for the display of visited cities
+            visitedCities: {},
+            // the states for the display of charity goals
+            charityGoals: {},
         }
+    }
 
-        this.props.locateCallback = this.locateCallback
-        this.props.travelCallback = this.travelCallback
+    componentDidMount = () => {
+        let apiName = 'circleApp'
+        let path = '/journey'
+        API.get(apiName, path).then(response => {
+            let newCityCount = response.tabTitles.newCityCount
+            let visitedCityCount = response.tabTitles.visitedCityCount
+            let charityCount = response.tabTitles.charityCount
+            response.routes = [
+                {key: 'first', title: 'NEW CITY ' + newCityCount},
+                {key: 'second', title: 'CITY VISITED ' + visitedCityCount},
+                {key: 'third', title: 'CHARITY ' + charityCount},
+            ]
+            this.setState(response)
+        }).catch(error => {
+            console.log(error)
+        })
     }
 
     // city includes the longitude and latitude information
     locateCallback = (e, city) => {
-        this.setState({
-            mapRegion: defaultMapRegion
-        })
-        console.log('locateCallback')
+        this.setState((state, props) => ({
+            map: {
+                locations: state.map.locations,
+                region: getScreenRegion([city]),
+            }
+        }))
     }
 
     travelCallback = (e, city) => {
-        console.log('travelCallback')
+        console.log(city)
+        let apiName = 'circleApp'
+        let path = '/info'
+        let newStar = this.state.starCount - city.starNeed
+        let currentCity = city.name
+        API.post(apiName, path, {
+            body: {
+                userId: '',
+                stars: newStar,
+                currentCity: currentCity
+            }
+        }).then(() => {
+            const {navigate} = this.props.navigation
+            navigate('Home')
+            DeviceEventEmitter.emit('refreshTimerScreen',  {})
+        }).catch(error => {
+            console.log(error)
+        })
     }
 
     NewCityRoute = () => {
         return (
             <View style={styles.scene} >
-                <NewCityList {...this.props} cities={
-                    [
-                        {
-                            name: 'Atlanta', totalCharityGoal: '20k', curCharityGoal: '229',
-                            pic: rectBuilding,
-                            subTitle: 'Charity Goal 229/30k',
-                        },
-                        {
-                            name: 'Savannah', totalCharityGoal: '20k', curCharityGoal: '229',
-                            pic: rectBuilding,
-                            subTitle: 'Charity Goal 229/30k',
-                        }, {
-                            name: 'Atlanta', totalCharityGoal: '20k', curCharityGoal: '229',
-                            pic: rectBuilding,
-                            subTitle: 'Charity Goal 229/30k',
-                        }]
-                } />
+                <NewCityList travelCallback={this.travelCallback} locateCallback={this.locateCallback}
+                {...this.props} {...this.state.newCities}/>
             </View>
         )
     }
     VisitedCityRoute = () => {
         return (
             <View style={styles.scene}>
-                <VisitedCityList {...this.props} cities={
-                    [
-                        {
-                            name: 'Atlanta', totalCharityGoal: '20k', curCharityGoal: '229',
-                            pic: rectBuilding,
-                            subTitle: 'Charity Goal 229/30k',
-                            description: 'Completed 7 hours 30 minutes away from phone, gained 450 stars. Helped local charity 6 times and achieved 1 charity goal during your last visit',
-                            postcards: [rectBuilding, rectBuilding, rectBuilding, rectBuilding, rectBuilding, rectBuilding, rectBuilding]
-                        },
-                        {
-                            name: 'Atlanta', totalCharityGoal: '20k', curCharityGoal: '229',
-                            pic: rectBuilding,
-                            subTitle: 'Charity Goal 229/30k',
-                            description: 'Completed 7 hours 30 minutes away from phone, gained 450 stars. Helped local charity 6 times and achieved 1 charity goal during your last visit',
-                            postcards: [rectBuilding]
-                        }, {
-                            name: 'Atlanta', totalCharityGoal: '20k', curCharityGoal: '229',
-                            pic: rectBuilding,
-                            subTitle: 'Charity Goal 229/30k',
-                            description: 'Completed 7 hours 30 minutes away from phone, gained 450 stars. Helped local charity 6 times and achieved 1 charity goal during your last visit',
-                            postcards: [rectBuilding]
-                        }]} />
+                <VisitedCityList locateCallback={this.locateCallback}
+                {...this.props} {...this.state.visitedCities}/>
             </View>
         )
     }
@@ -99,19 +111,7 @@ class JourneyScreen extends Component {
     CharityRoute = () => {
         return (
             <View style={styles.scene}>
-                <CharityList charities={
-                    [
-                        {
-                            name: 'Atlanta',
-                            subTitle: 'Charity Goal 229/30k',
-                            state: 'COMPLETED',
-                        },
-                        {
-                            name: 'Atlanta',
-                            subTitle: 'Charity Goal 229/30k',
-                            state: 'IN PROGRESS',
-                        }
-                    ]} />
+                <CharityList {...this.state.charityGoals}/>
             </View>
         )
     }
@@ -130,7 +130,7 @@ class JourneyScreen extends Component {
                             <Icon name="star" size={18} color={colors.starColor} />
                         </View>
 
-                        <JourneyMap region={this.state.mapRegion} locations={[{woe_id: '2489314', state: 'CURRENT_CITY',name: 'Atlanta', starNeed: '220'}]} styles={{ zIndex: 0 }} />
+                        <JourneyMap {...this.state.map} styles={{ zIndex: 0 }} />
                     </View>
                     <View style={styles.container}>
                         <TabView
@@ -166,11 +166,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     journeyText: {
-        fontFamily: 'Roboto',
     },
     starCount: {
-        fontFamily: 'Roboto',
-        fontSizes: 16,
+        fontSize: 16,
         fontWeight: '300',
         fontStyle: 'normal',
         color: colors.starTextColor,

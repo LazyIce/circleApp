@@ -6,25 +6,23 @@ import { colors } from './../Constants'
 class CharityList extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            // charities: [{name: , subTitle: , state: ,}, ]
-            charities: props.charities || [],
-        }
     }
 
     render() {
+        // charities: [{name: , subTitle: , state: ,}, ]
+        const charities = this.props.charities || []
         return (
             <View style={[styles.container,
                 { paddingLeft: '3%'}]}>
-                {this.state.charities &&
-                    this.state.charities.map((charity, index) => (
+                {charities &&
+                    charities.map((charity, index) => (
                         <ListItem
                             key={index}
                             leftElement={
                                 <View style={styles.container}>
-                                    <Text style={[styles.textStyle, { color: colors.black, fontSize: '12px', marginBottom: 5 }]}>{charity.state}</Text>
-                                    <Text style={[styles.textStyle, { fontSize: '16px', color: colors.subTitle, marginBottom: 10 }]}>{charity.name}</Text>
-                                    <Text style={[styles.textStyle, { fontSize: '14px', color: colors.subTitle }]}>{charity.subTitle}</Text>
+                                    <Text style={[styles.textStyle, { color: colors.black, fontSize: 12, marginBottom: 5 }]}>{charity.state}</Text>
+                                    <Text style={[styles.textStyle, { fontSize: 16, color: colors.subTitle, marginBottom: 10 }]}>{charity.name}</Text>
+                                    <Text style={[styles.textStyle, { fontSize: 14, color: colors.subTitle }]}>{charity.subTitle}</Text>
                                 </View>
                             }
                             bottomDivider={true}
@@ -47,7 +45,6 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end'
     },
     textStyle: {
-        fontFamily: 'Roboto',
         fontWeight: '500',
     },
 })

@@ -26,7 +26,7 @@ export const keys = {
 }
 
 export const endpoints = {
-    'cityBorder': 'https://api.flickr.com/services/rest/?method=flickr.places.getInfo&',
+    'getInfo': '/info/object/:userId'
 }
 
 export const objToQueryString = (obj) => {
@@ -43,4 +43,40 @@ export const defaultMapRegion = {
     longitude: -95.7129,
     latitudeDelta: 20.0,
     longitudeDelta: 45.0,
+}
+
+// given cities return the region in the map to display them
+export const getScreenRegion = (markerList) => {
+    // find the four bounary indexes
+    let left = 180, right = -180, top = -90, bottom = 90
+    // if there is no marker, just display the american map
+    if (!Array.isArray(markerList) || !markerList.length) {
+        return defaultMapRegion
+    }
+
+    // boundary of the markers
+    markerList.forEach(marker => {
+        left = Math.min(left, marker.latlng.longitude)
+        right = Math.max(right, marker.latlng.longitude)
+        top = Math.max(top, marker.latlng.latitude)
+        bottom = Math.min(bottom, marker.latlng.latitude)
+    })
+
+    // if there is one marker, return one bigger region containing the marker
+    if (markerList.length === 1) {
+        return {
+            latitude: (top + bottom) / 2.0,
+            longitude: (left + right) / 2.0,
+            latitudeDelta: 0.4,
+            longitudeDelta: 0.2,
+        }
+    }
+
+    // if there are more than one markers, return one bigger region containing all the markers
+    return {
+        latitude: (top + bottom) / 2.0,
+        longitude: (left + right) / 2.0,
+        latitudeDelta: Math.max((top - bottom) * 1.5, 89),
+        longitudeDelta: Math.max((right - left) * 1.5, 179),
+    }
 }

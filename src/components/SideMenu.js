@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'column',
 		justifyContent: 'space-between',
-		alignItems: 'start'
+		alignItems: 'flex-start'
 	},
     menu: {
         flexDirection: 'row',

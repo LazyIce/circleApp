@@ -7,29 +7,24 @@ import { colors } from './../Constants'
 class TimeChart extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            data: [50, 10, 40, 95, 4, 24, 0, 85, 0, 0, 35, 53, 53, 24, 50, 20],
-            titles: [{x: 0, text: '12 AM'}, {x: 4, text: '12 AM'}],
-            verticalDividers: [0, 4, 8, 12, 16],
-            fill: colors.chartBar,
-        }
 
         this.Background = this.Background.bind(this)
-
     }
 
     Background({x, y, data, ticks, width, height}) {
-        let dividers = this.state.verticalDividers
-        let titles = this.state.titles
+        let dividers = this.props.verticalDividers  || [0, 6, 12, 18, 24]
+        let titles = this.props.titles ||
+            [{ x: 0, text: '12 AM' }, { x: 6, text: '6 AM' }, { x: 12, text: '12 PM' }, { x: 18, text: '6 PM' }]
         return (
             <G>
                 {
                     titles &&
-                    titles.map((title) => (
+                    titles.map((title, index) => (
                         <Text
+                        key={index}
                         fill={colors.chartTitle}
                         stroke={colors.chartTitle}
-                        fontSize='12px'
+                        fontSize={12}
                         fontFamily='SFProText'
                         x={x(title.x)+10}
                         y={10}
@@ -38,7 +33,9 @@ class TimeChart extends Component {
 
                 }
                 { dividers &&
-                    dividers.map((divider) => (<Line
+                    dividers.map((divider, index) => (
+                        <Line
+                        key={index}
                         x1={x(divider)}
                         y1='0'
                         x2={x(divider)}
@@ -61,12 +58,14 @@ class TimeChart extends Component {
     }
 
     render() {
+        const data = this.props.data || Array(24).fill(0)
+        const fill = colors.chartBar
         return (
             <View style={{width: '100%'}}>
                 <BarChart
                     style={{ height: 200 }}
-                    data={this.state.data}
-                    svg={{ fill: this.state.fill, rx: 5, ry: 5 }}
+                    data={data}
+                    svg={{ fill: fill, rx: 5, ry: 5 }}
                     contentInset={{ top: 30, bottom: 30 }}
                     yMin={0}
                     contentInset={{ top: 0, left: 0, right: 2, bottom: 0 }}
