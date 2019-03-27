@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     timeText: {
-        fontSize: 80,
+        fontSize: 70,
         fontWeight: '400',
         color: '#000',
         height: 90

@@ -20,11 +20,11 @@ class InitScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <TimerHeader {...this.props} star={100} />
+                <TimerHeader {...this.props} star={1} />
                 <View style={styles.contentContainer}>
                     <Text style={styles.titleText}>Choose a city</Text>
                     <Text style={styles.contentText}>Let's decide where you journey begin</Text>
-                    <Input  
+                    <Input
                         placeholder='Type the city name'
                         rightIcon={{ type:'font-awesome', name: 'search', size: 18 }}
                         containerStyle={styles.inputConatiner}
@@ -32,17 +32,17 @@ class InitScreen extends Component {
                     />
                 </View>
                 <View style={styles.imgContainer}>
-                    <Avatar 
+                    <Avatar
                         size={218}
                         rounded
-                        source={building} 
+                        source={building}
                     />
                 </View>
                 <View style={styles.btnContainer}>
-                    <Button 
-                        buttonStyle={styles.button} 
-                        titleStyle={styles.btnFont} 
-                        title="CHOOSE ATLANTA" 
+                    <Button
+                        buttonStyle={styles.button}
+                        titleStyle={styles.btnFont}
+                        title="CHOOSE ATLANTA"
                         icon={
                             <Icon
                                 name="map-marker"
@@ -50,16 +50,16 @@ class InitScreen extends Component {
                                 color="white"
                             />
                         }
-                        iconRight 
+                        iconRight
                         onPress={() => this.props.navigation.dispatch(StackActions.reset({
                             index: 0,
                             actions: [NavigationActions.navigate({ routeName: 'Timer' })]
                         })) }
                         />
-                    <Button 
-                        buttonStyle={styles.button} 
-                        titleStyle={styles.btnFont} 
-                        title="SURPRISE ME"  
+                    <Button
+                        buttonStyle={styles.button}
+                        titleStyle={styles.btnFont}
+                        title="SURPRISE ME"
                         onPress={() => this.props.navigation.dispatch(StackActions.reset({
                             index: 0,
                             actions: [NavigationActions.navigate({ routeName: 'Timer' })]

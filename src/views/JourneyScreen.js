@@ -50,8 +50,8 @@ class JourneyScreen extends Component {
             let visitedCityCount = response.tabTitles.visitedCityCount
             let charityCount = response.tabTitles.charityCount
             response.routes = [
-                {key: 'first', title: 'NEW CITY ' + newCityCount},
-                {key: 'second', title: 'CITY VISITED ' + visitedCityCount},
+                {key: 'first', title: 'NEW ' + newCityCount},
+                {key: 'second', title: 'VISITED ' + visitedCityCount},
                 {key: 'third', title: 'CHARITY ' + charityCount},
             ]
             this.setState(response)
@@ -75,6 +75,7 @@ class JourneyScreen extends Component {
         let apiName = 'circleApp'
         let path = '/info'
         let newStar = this.state.starCount - city.starNeed
+        console.log('newStar: ' + newStar)
         let currentCity = city.name
         API.post(apiName, path, {
             body: {
@@ -123,9 +124,9 @@ class JourneyScreen extends Component {
                 <MyHeader {...this.props} title={this.state.title} />
                 <ScrollView style={{ flex: 1 }}>
                     <View style={[styles.container, { alignItems: 'center', height: 300 }]}>
-                        <View style={[styles.startCountContainer, { zIndex: 1, position: 'absolute', top: 17 }]}>
+                        <View style={[styles.starCountContainer, { zIndex: 1, position: 'absolute', top: 17 }]}>
                             <Text style={styles.starCount}>
-                                {this.state.startCount}
+                                {this.state.starCount}
                             </Text>
                             <Icon name="star" size={18} color={colors.starColor} />
                         </View>
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
     },
-    startCountContainer: {
+    starCountContainer: {
         width: 108,
         height: 23,
         borderRadius: 11.5,
