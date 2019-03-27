@@ -169,7 +169,7 @@ export default class Swiper extends Component {
                 {lastScreen
                     ? <Button title="Start Now" type='outline' buttonStyle={styles.button} titleStyle={styles.btnFont} onPress={() => this.props.navigation.dispatch(StackActions.reset({
                         index: 0,
-                        actions: [NavigationActions.navigate({ routeName: 'Init' })],
+                        actions: [NavigationActions.navigate({ routeName: 'Init' })]
                       }))} />
                     : <Button title="Continue" type='outline' buttonStyle={styles.button} titleStyle={styles.btnFont} onPress={() => this.swipe()} />
                 }

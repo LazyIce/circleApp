@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import { Button, Input, Avatar } from 'react-native-elements'
 import TimerHeader from './../components/TimerHeader'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { StackActions, NavigationActions } from 'react-navigation';
 import { building } from './../img_path'
 
 const BASE_WIDTH = Dimensions.get('window').width
@@ -19,7 +20,7 @@ class InitScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <TimerHeader {...this.props} star={199} />
+                <TimerHeader {...this.props} star={100} />
                 <View style={styles.contentContainer}>
                     <Text style={styles.titleText}>Choose a city</Text>
                     <Text style={styles.contentText}>Let's decide where you journey begin</Text>
@@ -50,13 +51,19 @@ class InitScreen extends Component {
                             />
                         }
                         iconRight 
-                        onPress={() => this.props.navigation.navigate('Timer')}
-                    />
+                        onPress={() => this.props.navigation.dispatch(StackActions.reset({
+                            index: 0,
+                            actions: [NavigationActions.navigate({ routeName: 'Timer' })]
+                        })) }
+                        />
                     <Button 
                         buttonStyle={styles.button} 
                         titleStyle={styles.btnFont} 
                         title="SURPRISE ME"  
-                        onPress={() => this.props.navigation.navigate('Timer')}
+                        onPress={() => this.props.navigation.dispatch(StackActions.reset({
+                            index: 0,
+                            actions: [NavigationActions.navigate({ routeName: 'Timer' })]
+                        })) }
                     />
                 </View>
             </View>
