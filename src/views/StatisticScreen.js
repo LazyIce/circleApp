@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
-import { ButtonGroup, Header } from 'react-native-elements';
+import { ButtonGroup } from 'react-native-elements';
 import { API } from 'aws-amplify'
 import VisitedMap from './../components/VisitedMap'
 import CharityGoalList from './../components/CharityGoalList'
@@ -60,7 +60,8 @@ class StatisticScreen extends Component {
                     buttons={this.timePeriods}
                     containerStyle={{height: 35}}
                     selectedButtonStyle={{backgroundColor: colors.purple}}
-                    textStyle={[styles.overviewText, {fontSize: 14}]}/>
+                    textStyle={[styles.overviewText, {fontSize: 14}]}
+                />
                 <ScrollView style={{flex: 1, marginBottom: 20}}>
                     <View style={[styles.container, styles.overviewSection, {height: 220, marginTop: 10}]}>
                         <Text style={[styles.overviewText, styles.overviewSectionTitle]}>

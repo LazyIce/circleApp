@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#FFF',
         shadowColor: 'transparent',
-        borderBottomWidth: 0
+        borderBottomWidth: 1
     },
     title: {
         color: '#000',
