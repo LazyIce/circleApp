@@ -19,7 +19,7 @@ class TimerScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <TimerHeader {...this.props} />
+                <TimerHeader {...this.props} star={199} />
                 <View style={styles.cityContainer}>
                     <Text style={styles.cityText}>{this.state.city}</Text>
                     <Text style={styles.completeText}>{this.state.cityCompleting}/{this.state.cityCompleted} charity goal</Text>
@@ -28,7 +28,7 @@ class TimerScreen extends Component {
                     <CircularSlider />
                 </View>
             </View>
-        );
+        )
     }
 }
 
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     container: {
         width: BASE_WIDTH,
         height: BASE_HEIGHT,
-        backgroundColor: '#FFAC31'
+        backgroundColor: '#FFF'
     },
     cityContainer: {
         width: BASE_WIDTH,
@@ -45,11 +45,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     cityText: {
-        color: '#FFFFFF',
+        color: '#000',
         fontSize: 40
     },
     completeText: {
-        color: '#FFFFFF',
+        color: '#000',
         fontSize: 20
     },
     sliderContainer: {

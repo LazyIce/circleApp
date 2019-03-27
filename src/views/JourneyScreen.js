@@ -23,7 +23,7 @@ class JourneyScreen extends Component {
             index: 0,
             routes: [
                 { key: 'first', title: 'NEW CITY 3' },
-                { key: 'second', title: 'CITY VISITED 5' },
+                { key: 'second', title: 'VISITED 5' },
                 { key: 'third', title: 'CHARITY 2' },
             ],
         }

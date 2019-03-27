@@ -13,7 +13,7 @@ class MyHeader extends Component {
             <TouchableOpacity onPress={() => {
                 this.props.navigation.goBack();
             }}>
-                <Icon name='chevron-left' size={25} color={'#FFF'} />
+                <Icon name='chevron-left' size={25} color={'#4E4E4E'} />
             </TouchableOpacity>
         );
     }
@@ -37,12 +37,12 @@ class MyHeader extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#FFAC31',
+        backgroundColor: '#FFF',
         shadowColor: 'transparent',
         borderBottomWidth: 0
     },
     title: {
-        color: '#FFF',
+        color: '#000',
         fontSize: 25
     }
 });

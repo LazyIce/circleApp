@@ -7,9 +7,6 @@ import { DrawerActions } from 'react-navigation'
 class TimerHeader extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            star: 200
-        }
     }
 
     renderLeftComponenent() {
@@ -17,7 +14,7 @@ class TimerHeader extends Component {
             <TouchableOpacity onPress={() => {
                 this.props.navigation.dispatch(DrawerActions.openDrawer());
             }}>
-                <Icon name='bars' size={30} color={'#FFF'} />
+                <Icon name='bars' size={30} color={'#4E4E4E'} />
             </TouchableOpacity>
         );
     }
@@ -25,8 +22,8 @@ class TimerHeader extends Component {
     renderCenterComponenet() {
         return (
             <Text style={styles.starText}>
-                {this.state.star + ' '}
-                <Icon name='star' size={18} color={'#FFFF00'} />
+                {this.props.star + ' '}
+                <Icon name='star' size={18} color={'#C5AFDD'} />
             </Text>
         );
     }
@@ -44,15 +41,15 @@ class TimerHeader extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#FFAC31',
+        backgroundColor: '#FFF',
         shadowColor: 'transparent',
         borderBottomWidth: 0
     },
     starText: {
-        color: '#FFF', 
+        color: '#000', 
         height: 25,
         fontSize: 18,
-        backgroundColor: '#FFD700',
+        backgroundColor: '#F0F0F0',
         paddingTop: 2,
         paddingLeft: 25,
         paddingRight: 25,

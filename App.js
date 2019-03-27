@@ -11,7 +11,7 @@ import JourneyScreen from './src/views/JourneyScreen'
 import StatisticScreen from './src/views/StatisticScreen'
 
 import Amplify, { API } from 'aws-amplify'
-import awsmobile from './src/aws-exports'
+import awsmobile from './aws-exports'
 Amplify.configure(awsmobile)
 
 export default class App extends Component {
@@ -51,10 +51,10 @@ let drawerNavigatorConfigs = {
 	drawerOpenRoute: 'DrawerOpen',
 	drawerCloseRoute: 'DrawerClose',
 	drawerToggleRoute: 'DrawerToggle',
-	drawerBackgroundColor: 'orange',
+	drawerBackgroundColor: '#F5E2FD',
 	contentComponent: SideMenu,
 	contentOptions: {
-		activeTintColor: 'orange'
+		activeTintColor: '#000'
 	}
 }
 

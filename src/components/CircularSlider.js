@@ -187,7 +187,7 @@ class CircleSlider extends Component {
                     </Text>
                     <Text style={styles.starText}>
                         You didn't get {Math.round(this.state.starVal) + ' '}
-                        <Icon name='star' size={18} color={'#FFFF00'} />
+                        <Icon name='star' size={18} color={'#C5AFDD'} />
                     </Text>
                 </View>
             );
@@ -199,7 +199,7 @@ class CircleSlider extends Component {
                     </Text>
                     <Text style={styles.starText}>
                         You earned {Math.round(this.state.starVal) + ' '}
-                        <Icon name='star' size={18} color={'#FFFF00'} />
+                        <Icon name='star' size={18} color={'#C5AFDD'} />
                     </Text>
                 </View>
             );
@@ -211,7 +211,7 @@ class CircleSlider extends Component {
                     </Text>
                     <Text style={styles.starText}>
                         You will get {Math.round(this.state.starVal) + ' '}
-                        <Icon name='star' size={18} color={'#FFFF00'} />
+                        <Icon name='star' size={18} color={'#C5AFDD'} />
                     </Text>
                 </View>
             );
@@ -228,7 +228,7 @@ class CircleSlider extends Component {
         return (
             <View style={styles.sliderConatainer}>
                 <Avatar
-                    size={214}
+                    size={218}
                     rounded
                     source={building}
                     containerStyle={{position: 'absolute', top: 33}}
@@ -261,7 +261,7 @@ class CircleSlider extends Component {
                             r={bR}
                             cx={bR}
                             cy={bR}
-                            fill={this.state.hideSlider ? 'none' : '#FF6347'}
+                            fill={this.state.hideSlider ? 'none' : '#A57AD4'}
                             {...this._panResponder.panHandlers}
                         />
                     </G>
@@ -270,10 +270,10 @@ class CircleSlider extends Component {
                 <View style={styles.btnContainer}>
                     {   
                         this.state.btnTitle === 'Share' ?
-                        <Button buttonStyle={styles.button} color='#FFFFFF' title='Restart' onPress={ () => this.setState({btnTitle: 'Travel', hideSlider: false, starVal: 1, angle: this.props.startCoord, seconds: 0})} /> :
+                        <Button buttonStyle={styles.button} titleStyle={styles.btnFont} title='Restart' onPress={ () => this.setState({btnTitle: 'Travel', hideSlider: false, starVal: 1, angle: this.props.startCoord, seconds: 0})} /> :
                         null
                     }
-                    <Button buttonStyle={styles.button} color='#FFFFFF' title={this.state.btnTitle} onPress={this.countTime.bind(this)} />
+                    <Button buttonStyle={styles.button} titleStyle={styles.btnFont} title={this.state.btnTitle} onPress={this.countTime.bind(this)} />
                 </View>
             </View>
         );
@@ -292,17 +292,17 @@ const styles = StyleSheet.create({
     timeText: {
         fontSize: 80,
         fontWeight: '400',
-        color: '#FFFFFF',
+        color: '#000',
         height: 90
     },
     hintText: {
         fontSize: 40,
-        color: '#FFFFFF',
+        color: '#000',
         height: 90
     },
     starText: {
         fontSize: 20,
-        color: '#FFFFFF'
+        color: '#000'
     },
     btnContainer: {
         width: BASE_WIDTH,
@@ -311,8 +311,11 @@ const styles = StyleSheet.create({
     },
     button: {
         width: BASE_WIDTH / 3,
-        backgroundColor: '#FF9900',
+        backgroundColor: '#A57AD4',
         marginTop: 30
+    },
+    btnFont: {
+        color: '#FFF'
     }
 })
 
@@ -324,9 +327,9 @@ CircleSlider.defaultProps = {
     maxValue: 360,
     xCenter: BASE_WIDTH / 2,
     yCenter: BASE_HEIGHT / 2,
-    startGradient: '#3CB371',
-    endGradient: '#90EE90',
-    backgroundColor: '#FFD700',
+    startGradient: '#D5C0EF',
+    endGradient: '#D5C0EF',
+    backgroundColor: '#E0DDEA',
     startCoord: 1,
     onValueChange: x => x
 }
