@@ -12,28 +12,34 @@ class TimerScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            stars: 0,
+            stars: 1,
+            currentCity: 'Atlanta',
+            cityCompleting: '232',
+            cityCompleted: '30k',
         }
     }
 
-    _fetchData = () => {
-        let apiName = 'circleApp'
-        let path = '/info/object/:userId'
-        API.get(apiName, path).then(response => {
-            console.log(response)
-            // response: {userId: , stars: , currentCity: }
-            this.setState({
-                stars: response.stars || 0,
-                currentCity: 'Atlanta',
-                cityCompleting: '232',
-                cityCompleted: '30k',
-            })
-        }).catch(error => {
-            console.log(error)
-        })
-    }
+    // _fetchData = () => {
+    //     let apiName = 'circleApp'
+    //     let path = '/info/object/:userId'
+    //     API.get(apiName, path).then(response => {
+    //         console.log(response)
+    //         // response: {userId: , stars: , currentCity: }
+    //         this.setState({
+    //             // stars: response.stars || 1,
+    //             // currentCity: response.currentCity || '',
+    //             stars: response.stars || 1,
+    //             currentCity: response.currentCity || '',
+    //             cityCompleting: '232',
+    //             cityCompleted: '30k',
+    //         })
+    //     }).catch(error => {
+    //         console.log(error)
+    //     })
+    // }
+
     componentDidMount = () => {
-        this._fetchData()
+        // this._fetchData()
         DeviceEventEmitter.addListener('refreshTimerScreen', this._fetchData)
     }
 
@@ -43,20 +49,22 @@ class TimerScreen extends Component {
     }
 
     timerSucceedCallback = (addedStar) => {
-        let apiName = 'circleApp'
-        let path = '/info'
-        let newStar = this.state.stars || 0 + addedStar
-        let currentCity = this.state.currentCity
-        console.log('post data, newStar: ' + newStar)
-        API.post(apiName, path, {
-            body: {
-                userId: '',
-                stars: newStar,
-                currentCity: currentCity
-            }
-        }).then(this.updateStarCount.bind(this, newStar)).catch(error => {
-            console.log(error)
-        })
+        // let apiName = 'circleApp'
+        newStar = this.state.stars + addedStar
+        this.updateStarCount(newStar)
+        // let path = '/info'
+        // let newStar = this.state.stars || 0 + addedStar
+        // let currentCity = this.state.currentCity
+        // console.log('post data, newStar: ' + newStar)
+        // API.post(apiName, path, {
+        //     body: {
+        //         userId: '',
+        //         stars: newStar,
+        //         currentCity: currentCity
+        //     }
+        // }).then(this.updateStarCount.bind(this, newStar)).catch(error => {
+        //     console.log(error)
+        // })
     }
 
     render() {
