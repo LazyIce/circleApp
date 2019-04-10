@@ -60,7 +60,7 @@ class CircleSlider extends Component {
             if (this.state.btnTitle === 'GiveUp' && Math.round(new Date().getTime() - this.backgroundTime) > 6000) {
                 this._timer&&clearInterval(this._timer);
                 Alert.alert('You failed!');
-                this.setState({btnTitle: 'Travel', starVal: 1, angle: this.props.startCoord, seconds: 0});
+                this.setState({btnTitle: 'Travel', starVal: 1, angle: this.props.startCoord, seconds: 0, hideSlider: false});
             }
         }
         this.setState({appState: nextAppState});
