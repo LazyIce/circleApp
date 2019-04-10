@@ -18,26 +18,33 @@ class AchievementScreen extends Component {
             list:[
                 {
                     img: 'https://s3.amazonaws.com/beauty-images/fox.png',
-                    name: 'Atlanta'
+                    name: 'Atlanta',
+                    date: 'Mar.12th,2019'
                 },
                 {
                     img: 'https://s3.amazonaws.com/beauty-images/fox.png',
-                    name: 'New York'
+                    name: 'New York',
+                    date: 'Feb.10th,2019'
                 },
                 {
                     img: 'https://s3.amazonaws.com/beauty-images/fox.png',
-                    name: 'Seattle'
+                    name: 'Seattle',
+                    date: 'Oct.17th,2018'
                 },
                 {
                     img: 'https://s3.amazonaws.com/beauty-images/fox.png',
-                    name: 'Los Angeles'
+                    name: 'Los Angeles',
+                    date: 'Apr.26th,2018'
                 },
                 {
                     img: 'https://s3.amazonaws.com/beauty-images/fox.png',
-                    name: 'San Francisco'
+                    name: 'San Francisco',
+                    date: 'Jan.15th,2018'
                 }
             ],
             modalImage: 'https://s3.amazonaws.com/beauty-images/fox.png',
+            modalCity: 'Atlanta',
+            modalDate: 'Jun.12th,2019',
             base64Img: 'https://s3.amazonaws.com/beauty-images/fox.png'
         }
     }
@@ -45,7 +52,9 @@ class AchievementScreen extends Component {
     setModalVisible(visible, key) {
         if (key) {
             this.setState({
-                modalImage: this.state.list[key].img
+                modalImage: this.state.list[key].img,
+                modalCity: this.state.list[key].name,
+                modalDate: this.state.list[key].date,
             });
         }
         this.setState({
@@ -102,7 +111,7 @@ class AchievementScreen extends Component {
                                 />
                             </View>
                             <View style={styles.title}>
-                                <Text style={{fontSize: 16}}>Atlanta - 03/11/2019</Text>
+                                <Text style={{fontSize: 16}}>{this.state.modalCity} - {this.state.modalDate}</Text>
                             </View>
                         </View>
                     </View>
