@@ -57,7 +57,7 @@ class CircleSlider extends Component {
             this.backgroundTime = new Date().getTime()
         }
         if (this.state.appState === 'inactive' || this.state.appState === 'background' && nextAppState === 'active') {
-            if (this.state.btnTitle === 'GiveUp' && Math.round(new Date().getTime() - this.backgroundTime) > 8000) {
+            if (this.state.btnTitle === 'GiveUp' && Math.round(new Date().getTime() - this.backgroundTime) > 6000) {
                 this._timer&&clearInterval(this._timer);
                 Alert.alert('You failed!');
                 this.setState({btnTitle: 'Travel', starVal: 1, angle: this.props.startCoord, seconds: 0});
@@ -141,7 +141,7 @@ class CircleSlider extends Component {
                     this.timerSucceed();
                   }
                 }
-            }, 1000);
+            }, 100);
         } else if (this.state.btnTitle === 'GiveUp') {
             Alert.alert('Are you sure you want to give up?', 'You will not receive the stars for this session', [
                 {text: 'Yes, I give up', onPress: () => {
@@ -216,7 +216,7 @@ class CircleSlider extends Component {
             return (
                 <View style={styles.hintContainer}>
                     <Text style={styles.timeText}>
-                        {this.props.onValueChange(this.state.angle)}:{this.state.seconds < 10 ? '0' + this.state.seconds : this.state.seconds}
+                        {this.props.onValueChange(Math.round(this.state.angle/360*this.props.maxValue))}:{this.state.seconds < 10 ? '0' + this.state.seconds : this.state.seconds}
                     </Text>
                     <Text style={styles.starText}>
                         You will get {Math.round(this.state.starVal) + ' '}

@@ -5,9 +5,9 @@ import InitScreen from './../views/InitScreen'
 
 const stackNav = createStackNavigator(
     {
-        // Onboard: {
-        //     screen: OnboardScreen
-        // },
+        Onboard: {
+            screen: OnboardScreen
+        },
         Init: {
             screen: InitScreen
         },

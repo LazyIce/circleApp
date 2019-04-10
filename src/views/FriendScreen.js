@@ -47,7 +47,7 @@ class FriendScreen extends Component {
                 },
                 {
                     name: 'Nancy Hsi',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
                     star: 160
                 },
                 {
@@ -62,13 +62,13 @@ class FriendScreen extends Component {
                 },
                 {
                     name: 'Lily Wolf',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
                     star: 30
                 }
             ],
             user: {
                 name: 'bxie41',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
                 star: 200,
                 index: 6
             }

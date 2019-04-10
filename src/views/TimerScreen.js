@@ -24,7 +24,7 @@ class TimerScreen extends Component {
             // response: {userId: , stars: , currentCity: }
             this.setState({
                 stars: response.stars || 0,
-                currentCity: response.currentCity || '',
+                currentCity: 'Atlanta',
                 cityCompleting: '232',
                 cityCompleted: '30k',
             })

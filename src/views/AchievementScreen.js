@@ -3,7 +3,7 @@ import { View, Text, Image, TouchableOpacity, Modal, FlatList, StyleSheet, Dimen
 import { Card } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import MyHeader from './../components/MyHeader'
-import {rectBuilding} from './../img_path'
+import {fox} from './../img_path'
 
 const BASE_WIDTH = Dimensions.get('window').width
 const BASE_HEIGHT = Dimensions.get('window').height
@@ -15,36 +15,39 @@ class AchievementScreen extends Component {
         this.state = {
             title: 'Achievement',
             modalVisible: false,
-            modalImage: rectBuilding,
             list:[
                 {
-                    img: rectBuilding,
+                    img: 'https://s3.amazonaws.com/beauty-images/fox.png',
                     name: 'Atlanta'
                 },
                 {
-                    img: rectBuilding,
+                    img: 'https://s3.amazonaws.com/beauty-images/fox.png',
                     name: 'New York'
                 },
                 {
-                    img: rectBuilding,
+                    img: 'https://s3.amazonaws.com/beauty-images/fox.png',
                     name: 'Seattle'
                 },
                 {
-                    img: rectBuilding,
+                    img: 'https://s3.amazonaws.com/beauty-images/fox.png',
                     name: 'Los Angeles'
                 },
                 {
-                    img: rectBuilding,
+                    img: 'https://s3.amazonaws.com/beauty-images/fox.png',
                     name: 'San Francisco'
                 }
-            ]
+            ],
+            modalImage: 'https://s3.amazonaws.com/beauty-images/fox.png',
+            base64Img: 'https://s3.amazonaws.com/beauty-images/fox.png'
         }
     }
 
     setModalVisible(visible, key) {
-        this.setState({
-            modalImage: this.state.list[key]
-        });
+        if (key) {
+            this.setState({
+                modalImage: this.state.list[key].img
+            });
+        }
         this.setState({
             modalVisible: visible
         });
@@ -52,8 +55,8 @@ class AchievementScreen extends Component {
 
     sharePost() {
         Share.share({
-            message: 'I successed in focusing on my work.',
-            url: 'www.google.com',
+            message: 'I got an new postcard in Circle app.',
+            url: this.state.base64Img,
             title: 'Circle'
         }, {
             dialogTitle: 'Share postCard',
@@ -93,7 +96,7 @@ class AchievementScreen extends Component {
                             </View>
                             <View style={styles.image}>
                                 <Image 
-                                    source={rectBuilding} 
+                                    source={{uri: this.state.modalImage}} 
                                     resizeMode={'strech'} 
                                     style={{width: BASE_WIDTH - 90, height: BASE_HEIGHT - 240}}
                                 />
@@ -105,14 +108,15 @@ class AchievementScreen extends Component {
                     </View>
                 </Modal>
                 <FlatList 
+                    style={{marginBottom:10}}
                     numColumns={2}
                     data={this.state.list}
-                    renderItem={({item})=> 
+                    renderItem={({item, index})=> 
                         {
                             return (
-                                <TouchableOpacity style={styles.cardContainer} activeOpacity={0.6} onPress={()=> {this.setModalVisible(true)}}>
+                                <TouchableOpacity style={styles.cardContainer} activeOpacity={0.6} onPress={()=> {this.setModalVisible(true, index)}}>
                                     <Card 
-                                        image={item.img} 
+                                        image={{uri: item.img}}
                                         imageProps={{resizeMode: "strech"}} 
                                         imageStyle={{height: BASE_HEIGHT / 3.5}}
                                     >

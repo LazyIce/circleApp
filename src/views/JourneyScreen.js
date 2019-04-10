@@ -18,8 +18,8 @@ class JourneyScreen extends Component {
             title: 'Journey',
             index: 0,
             routes: [
-                { key: 'first', title: 'NEW CITY 3' },
-                { key: 'second', title: 'VISITED CITY 5' }
+                { key: 'first', title: 'NEW CITY 2' },
+                { key: 'second', title: 'VISITED CITY 4' }
             ],
             startCount: 0,
             // the states for the display of tab titles

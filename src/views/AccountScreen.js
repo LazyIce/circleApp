@@ -31,7 +31,7 @@ class AccountScreen extends Component {
                     <View style={styles.avatarContainer}>
                         <Avatar 
                             rounded 
-                            title={this.state.username.substr(0,1).toUpperCase()} 
+                            source={{uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg' }}
                             size={BASE_HEIGHT / 6}
                             containerStyle={{marginTop: 20}}
                         />

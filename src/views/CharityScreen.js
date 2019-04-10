@@ -28,25 +28,25 @@ class CharityScreen extends Component {
                     content: "COCA COLA has donated 20k to the Atlanta Children's Hospital"
                 },
                 {
-                    city: 'Atlanta',
+                    city: 'Chicago',
                     completed: false,
                     title: '2320/200k',
                     img: {rectBuilding},
-                    content: "Once this goal is completed, COCA COLA will donate 20k to the Atlanta Children's Hospital" 
+                    content: "Once this goal is completed, Blue Cross Blue Shield Association will donate 20k to the Chicago Children's Hospital" 
                 },
                 {
-                    city: 'Atlanta',
+                    city: 'New York',
                     completed: true,
-                    title: 'APR 4th, 2019',
+                    title: 'Jun 1st, 2018',
                     img: {rectBuilding},
-                    content: "COCA COLA has donated 20k to the Atlanta Children's Hospital" 
+                    content: "Cidental has donated 20k to the New York Children's Hospital" 
                 },
                 {
-                    city: 'Atlanta',
+                    city: 'Seattle',
                     completed: false,
-                    title: '2320/200k',
+                    title: '6670/300k',
                     img: {rectBuilding},
-                    content: "Once this goal is completed, COCA COLA will donate 20k to the Atlanta Children's Hospital" 
+                    content: "Once this goal is completed, Amazon will donate 30k to the Seattle Red Cross Organization" 
                 }
             ]
         }
@@ -54,11 +54,11 @@ class CharityScreen extends Component {
 
     sharePost() {
         Share.share({
-            message: 'I successed in focusing on my work.',
-            url: 'www.google.com',
+            message: 'I have succeeded in Atlanta Charity Goal',
+            url: 'https://s3.amazonaws.com/beauty-images/fox.pngwww.google.com',
             title: 'Circle'
         }, {
-            dialogTitle: 'Share postCard',
+            dialogTitle: 'Achieved Charity Goal',
             tintColor: 'green'
         })
         .then(this.showResult)
