@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native'
-import { Header, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Amplify, { API } from 'aws-amplify'
 import { colors, defaultMapRegion } from './../Constants'
@@ -8,7 +7,6 @@ import JourneyMap from './../components/JourneyMap';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import NewCityList from './../components/NewCityList'
 import VisitedCityList from './../components/VisitedCityList'
-import CharityList from './../components/CharityList'
 import MyHeader from './../components/MyHeader'
 import { getScreenRegion } from './../Constants'
 import { DeviceEventEmitter } from 'react-native'
@@ -21,24 +19,20 @@ class JourneyScreen extends Component {
             index: 0,
             routes: [
                 { key: 'first', title: 'NEW CITY 3' },
-                { key: 'second', title: 'VISITED 5' },
-                { key: 'third', title: 'CHARITY 2' },
+                { key: 'second', title: 'VISITED CITY 5' }
             ],
             startCount: 0,
             // the states for the display of tab titles
             tabTitles: {
                 newCityCount: 0,
                 visitedCityCount: 0,
-                charityCount: 0,
             },
             // the states for the display of map
             map: {},
             // the states for the display of new cities
             newCities: {},
             // the states for the display of visited cities
-            visitedCities: {},
-            // the states for the display of charity goals
-            charityGoals: {},
+            visitedCities: {}
         }
     }
 
@@ -48,11 +42,9 @@ class JourneyScreen extends Component {
         API.get(apiName, path).then(response => {
             let newCityCount = response.tabTitles.newCityCount
             let visitedCityCount = response.tabTitles.visitedCityCount
-            let charityCount = response.tabTitles.charityCount
             response.routes = [
-                {key: 'first', title: 'NEW ' + newCityCount},
-                {key: 'second', title: 'VISITED ' + visitedCityCount},
-                {key: 'third', title: 'CHARITY ' + charityCount},
+                {key: 'first', title: 'NEW CITY ' + newCityCount},
+                {key: 'second', title: 'VISITED CITY ' + visitedCityCount},
             ]
             this.setState(response)
         }).catch(error => {
@@ -109,15 +101,6 @@ class JourneyScreen extends Component {
         )
     }
 
-    CharityRoute = () => {
-        return (
-            <View style={styles.scene}>
-                <CharityList {...this.state.charityGoals}/>
-            </View>
-        )
-    }
-
-
     render() {
         return (
             <View style={[styles.container, {backgroundColor: colors.white}]}>
@@ -130,7 +113,6 @@ class JourneyScreen extends Component {
                             </Text>
                             <Icon name="star" size={18} color={colors.starColor} />
                         </View>
-
                         <JourneyMap {...this.state.map} styles={{ zIndex: 0 }} />
                     </View>
                     <View style={styles.container}>
@@ -138,8 +120,7 @@ class JourneyScreen extends Component {
                             navigationState={this.state}
                             renderScene={SceneMap({
                                 first: this.NewCityRoute,
-                                second: this.VisitedCityRoute,
-                                third: this.CharityRoute,
+                                second: this.VisitedCityRoute
                             })}
                             onIndexChange={index => this.setState({ index })}
                         />
