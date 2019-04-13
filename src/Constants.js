@@ -25,10 +25,6 @@ export const keys = {
     'flickr': '1da35bb5f8888aca46cb54dca008a6f6',
 }
 
-export const endpoints = {
-    'getInfo': '/info/object/:userId'
-}
-
 export const objToQueryString = (obj) => {
     const keyValuePairs = [];
     for(const key in obj) {
@@ -43,6 +39,10 @@ export const defaultMapRegion = {
     longitude: -95.7129,
     latitudeDelta: 20.0,
     longitudeDelta: 45.0,
+}
+
+export const now = () => {
+    new Date().toLocaleString();
 }
 
 // given cities return the region in the map to display them
@@ -79,4 +79,20 @@ export const getScreenRegion = (markerList) => {
         latitudeDelta: Math.max((top - bottom) * 1.5, 89),
         longitudeDelta: Math.max((right - left) * 1.5, 179),
     }
+}
+
+export const APIName = "circleApp"
+
+// the endpoints for API calls
+export const endpoints = {
+    POSTCARD_GET_SINGLE: '/postcard/object/:postcardId',
+    POSTCARD_GET_LIST: '/postcard/:cityId',
+    ACHIEVEMENT_GET_LIST: '/achievement/:userId',
+    ACHIEVEMENT_POST: '/achievement',
+    VISITEDCITY_POST: '/visitedCity',
+    VISITEDCITY_GET_LIST: '/visitedCity/:userId',
+    CITY_GET_SINGLE: '/city/object/:cityId',
+    CITY_GET_LIST: '/city/:cityId',
+    INFO_GET_SINGLE: '/info/object/:userId',
+    INFO_POST: '/info',
 }
