@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Dimensions, Modal } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { Button } from 'react-native-elements'
 import Amplify, { API } from 'aws-amplify'
 import { colors, defaultMapRegion } from './../Constants'
 import JourneyMap from './../components/JourneyMap';
@@ -11,6 +12,9 @@ import MyHeader from './../components/MyHeader'
 import { getScreenRegion } from './../Constants'
 import { DeviceEventEmitter } from 'react-native'
 
+BASE_WIDTH = Dimensions.get("window").width;
+BASE_HEIGHT = Dimensions.get("window").height;
+
 class JourneyScreen extends Component {
     constructor(props) {
         super(props)
@@ -18,9 +22,12 @@ class JourneyScreen extends Component {
             title: 'Journey',
             index: 0,
             routes: [
-                { key: 'first', title: 'NEW CITY 2' },
-                { key: 'second', title: 'VISITED CITY 4' }
+                { key: 'first', title: 'NEW CITY 0' },
+                { key: 'second', title: 'VISITED CITY 0' }
             ],
+            unlockModal: false,
+            unlockCity: "",
+            unlockCityStar: "",
             startCount: 0,
             // the states for the display of tab titles
             tabTitles: {
@@ -63,6 +70,7 @@ class JourneyScreen extends Component {
     }
 
     travelCallback = (e, city) => {
+        this.popUnlockModal(false);
         console.log(city)
         let apiName = 'circleApp'
         let path = '/info'
@@ -87,7 +95,7 @@ class JourneyScreen extends Component {
     NewCityRoute = () => {
         return (
             <View style={styles.scene} >
-                <NewCityList travelCallback={this.travelCallback} locateCallback={this.locateCallback}
+                <NewCityList popUnlockModal={(unlockModal, unlockCity) => this.popUnlockModal(unlockModal, unlockCity)} locateCallback={this.locateCallback}
                 {...this.props} {...this.state.newCities}/>
             </View>
         )
@@ -102,10 +110,52 @@ class JourneyScreen extends Component {
         )
     }
 
+    popUnlockModal(unlockModal, city) {
+        if (city !== undefined && city !== null)
+            this.setState({
+                unlockCity: city
+            });
+        this.setState({
+            unlockModal: unlockModal
+        });
+    }
+
     render() {
         return (
             <View style={[styles.container, {backgroundColor: colors.white}]}>
                 <MyHeader {...this.props} title={this.state.title} />
+                <Modal  
+                    animationType={'fade'}
+                    transparent={true}
+                    visible={this.state.unlockModal}
+                    onRequestClose={()=>{}}
+                >
+                    <View style={styles.modal}>
+                        <View style={styles.content}>
+                            <View style={styles.title}>
+                                <Text style={{fontSize: 20}}>Unlock and travel to</Text>
+                            </View>
+                            <View style={styles.title}>
+                                <Text style={{fontSize: 25, fontWeight: '500'}}>{this.state.unlockCity}</Text>
+                            </View>
+                            <View style={styles.title}>
+                                <Text style={{fontSize: 20}}>cost you</Text>
+                            </View>
+                            <View style={styles.title}>
+                                <Text style={styles.starText}>
+                                    {this.state.unlockCityStar + ' '}
+                                    <Icon name='star' size={18} color={'#C5AFDD'} />
+                                </Text>
+                            </View>
+                            <View style={styles.btnGroup}>
+                                <Button title="Cancel" buttonStyle={styles.button} onPress={() => {this.popUnlockModal(false)}} />
+                                <Button title="Unlock" buttonStyle={styles.button} onPress={()=> {
+                                    this.travelCallback(e, this.state.unlockCity);
+                                }} />
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
                 <ScrollView style={{ flex: 1 }}>
                     <View style={[styles.container, { alignItems: 'center', height: 300 }]}>
                         <View style={[styles.starCountContainer, { zIndex: 1, position: 'absolute', top: 17 }]}>
@@ -161,6 +211,45 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'flex-start',
     },
+    modal: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    content: {
+        width: BASE_WIDTH - 60,
+        height: BASE_HEIGHT / 2.5,
+        backgroundColor: '#FFF',
+        borderRadius: 5,
+        flexDirection: 'column',
+        justifyContent: 'space-around'
+    },
+    title: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center'
+    },
+    btnGroup: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: "center"
+    },
+    button: {
+        width: BASE_WIDTH / 4,
+        backgroundColor: '#A57AD4',
+    },
+    starText: {
+        color: '#000', 
+        height: 25,
+        fontSize: 18,
+        backgroundColor: '#F0F0F0',
+        paddingTop: 2,
+        paddingLeft: 25,
+        paddingRight: 25,
+        borderRadius: 10,
+        overflow: 'hidden'
+    }
 })
 
 export default JourneyScreen

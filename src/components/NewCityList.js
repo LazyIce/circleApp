@@ -9,17 +9,8 @@ class NewCityList extends Component {
     constructor(props) {
         super(props)
 
-        console.log(props)
-        this.travelCallback = props.travelCallback
+        this.popUnlockModal = props.popUnlockModal
         this.locateCallback = props.locateCallback
-    }
-
-    onTravelClick = (e, city) => {
-        this.travelCallback(e, city)
-    }
-
-    onLocateClik = (e, city) => {
-        this.locateCallback(e, city)
     }
 
     render() {
@@ -37,7 +28,7 @@ class NewCityList extends Component {
                                         <Text style={[styles.textStyle, { color: colors.black, fontSize: 24, marginBottom: 5 }]}>{city.name}</Text>
                                         <Text style={[styles.textStyle, { fontSize: 14, color: colors.subTitle, marginBottom: 25 }]}>{city.subTitle}</Text>
                                         <View style={[styles.rowContainer]}>
-                                            <Button onPress={(e) => this.onTravelClick(e, city)} titleStyle={[styles.textStyle, { fontSize: 14, color: colors.cityButton, }]} title='TRAVEL' type='clear'></Button>
+                                            <Button onPress={(e) => this.popUnlockModal(true, city.name)} titleStyle={[styles.textStyle, { fontSize: 14, color: colors.cityButton, }]} title='TRAVEL' type='clear'></Button>
                                             <Button onPress={(e) => this.onLocateClik(e, city)} titleStyle={[styles.textStyle, { fontSize: 14, color: colors.cityButton, }]} title='LOCATE' type='clear'></Button>
                                         </View>
                                     </View>
