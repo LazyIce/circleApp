@@ -92,6 +92,7 @@ class JourneyScreen extends Component {
             </View>
         )
     }
+    
     VisitedCityRoute = () => {
         return (
             <View style={styles.scene}>

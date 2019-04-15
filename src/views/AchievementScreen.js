@@ -3,7 +3,6 @@ import { View, Text, Image, TouchableOpacity, Modal, FlatList, StyleSheet, Dimen
 import { Card } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import MyHeader from './../components/MyHeader'
-import {fox} from './../img_path'
 
 const BASE_WIDTH = Dimensions.get('window').width
 const BASE_HEIGHT = Dimensions.get('window').height

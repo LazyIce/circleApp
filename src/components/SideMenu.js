@@ -30,7 +30,7 @@ class SideMenu extends Component {
                 </TouchableOpacity>
                 <TouchableOpacity style={ styles.menu } onPress={this.navigateToScreen('Achievement')}>
                     <Icon name='trophy' color={ICON_COLOR} size={24} />
-                    <Text style={styles.menuText}>Achievement</Text>
+                    <Text style={styles.menuText}>Postcards</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={ styles.menu } onPress={this.navigateToScreen('Friend')}>
                     <Icon name='users' color={ICON_COLOR} size={24} />
