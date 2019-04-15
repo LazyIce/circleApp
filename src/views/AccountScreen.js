@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import { Avatar, Button, ListItem } from 'react-native-elements'
 import MyHeader from './../components/MyHeader'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { getVisitedCities, getCurrentUserInfo, getUsername, getAchievementListWithoutDetail } from './../APIs'
+import { getAvatar } from './../Constants'
 
 const BASE_WIDTH = Dimensions.get('window').width
 const BASE_HEIGHT = Dimensions.get('window').height
@@ -13,14 +15,33 @@ class AccountScreen extends Component {
 
         this.state = {
             title: 'Account',
-            username: 'bxie41',
-            star: 1,
-            time: 480,
-            allstar: 301,
-            city: 3,
-            postcard: 20,
-            charity: 4
+            username: '***',
+            star: 0,
+            time: 0,
+            allstar: 0,
+            city: 0,
+            postcard: 0,
+            charity: 0,
+            avatar: ''
         }
+    }
+
+    componentDidMount = async() => {
+        let visited = await getVisitedCities();
+        let userInfo = await getCurrentUserInfo();
+        let username = await getUsername(userInfo.userId);
+        let achievements = await getAchievementListWithoutDetail();
+
+        this.setState({
+            username: username.username,
+            star: userInfo.curStar + ' ',
+            time: userInfo.totalTime,
+            allstar: userInfo.totalStar + ' ',
+            city: visited.length + ' ',
+            postcard: achievements.length + ' ',
+            charity: 0 + ' ',
+            avatar: getAvatar(userInfo.userId)
+        });
     }
 
     render() {
@@ -29,9 +50,9 @@ class AccountScreen extends Component {
                 <MyHeader {...this.props} title={this.state.title} />
                 <View style={styles.contentContainer}>
                     <View style={styles.avatarContainer}>
-                        <Avatar 
-                            rounded 
-                            source={{uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg' }}
+                        <Avatar
+                            rounded
+                            source={{uri: this.state.avatar }}
                             size={BASE_HEIGHT / 6}
                             containerStyle={{marginTop: 20}}
                         />
@@ -42,7 +63,7 @@ class AccountScreen extends Component {
                         </Text>
                     </View>
                     <View style={styles.listContainer}>
-                        <ListItem 
+                        <ListItem
                             containerStyle={styles.listItemContainer}
                             titleStyle={styles.listTitle}
                             rightTitleStyle={styles.rightTitle}
@@ -50,7 +71,7 @@ class AccountScreen extends Component {
                             title={'Total time: '}
                             rightTitle={Math.floor(this.state.time / 1440) + 'd' + Math.floor(this.state.time % 1440 / 60) + 'h' + Math.floor(this.state.time % 1440 % 60) + 'm'}
                         />
-                        <ListItem 
+                        <ListItem
                             containerStyle={styles.listItemContainer}
                             titleStyle={styles.listTitle}
                             rightTitleStyle={styles.rightTitle}
@@ -58,7 +79,7 @@ class AccountScreen extends Component {
                             leftIcon={{ name: 'star', size: 28, color: '#A57AD4' }}
                             rightTitle={this.state.allstar}
                         />
-                        <ListItem 
+                        <ListItem
                             containerStyle={styles.listItemContainer}
                             titleStyle={styles.listTitle}
                             rightTitleStyle={styles.rightTitle}
@@ -66,7 +87,7 @@ class AccountScreen extends Component {
                             leftIcon={{ name: 'flight-takeoff', size: 28, color: '#A57AD4' }}
                             rightTitle={this.state.city}
                         />
-                        <ListItem 
+                        <ListItem
                             containerStyle={styles.listItemContainer}
                             titleStyle={styles.listTitle}
                             rightTitleStyle={styles.rightTitle}
@@ -74,7 +95,7 @@ class AccountScreen extends Component {
                             leftIcon={{ name: 'collections', size: 28, color: '#A57AD4' }}
                             rightTitle={this.state.postcard}
                         />
-                        <ListItem 
+                        <ListItem
                             containerStyle={[styles.listItemContainer, {borderBottomWidth: 1}]}
                             titleStyle={styles.listTitle}
                             rightTitleStyle={styles.rightTitle}
@@ -84,11 +105,11 @@ class AccountScreen extends Component {
                         />
                     </View>
                     <View style={styles.btnContainer}>
-                        <Button 
-                            buttonStyle={styles.button} 
-                            titleStyle={styles.btnFont} 
-                            title={'LOG OUT'} 
-                            onPress={()=>{}} 
+                        <Button
+                            buttonStyle={styles.button}
+                            titleStyle={styles.btnFont}
+                            title={'LOG OUT'}
+                            onPress={()=>{}}
                         />
                     </View>
                 </View>
@@ -123,7 +144,7 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     starText: {
-        color: '#000', 
+        color: '#000',
         height: 25,
         fontSize: 18,
         backgroundColor: '#F0F0F0',

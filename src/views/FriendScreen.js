@@ -3,6 +3,8 @@ import { FlatList, View, Text, StyleSheet, Dimensions, Modal, TouchableOpacity, 
 import { Avatar, Input, Button, Header } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import FriendHeader from './../components/FriendHeader'
+import { getFriends, getRequestList, getCurrentUserInfo, getUsername } from '../APIs';
+import { getAvatar } from '../Constants';
 
 const BASE_WIDTH = Dimensions.get('window').width
 const BASE_HEIGHT = Dimensions.get('window').height
@@ -16,117 +18,13 @@ class FriendScreen extends Component {
             addFriendModal: false,
             requestModal: false,
             requestNumber: 0,
-            list: [
-                {
-                    name: 'Brette Bayne',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                    star: 430
-                },
-                {
-                    name: 'Joe Lee',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                    star: 420
-                },
-                {
-                    name: 'Yuki Iwashita',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                    star: 360
-                    
-                },
-                {
-                    name: 'Samathon Flam',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                    star: 320
-                },
-                {
-                    name: 'Sam Mohanmod',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                    star: 220
-                },
-                {
-                    name: 'bxie41',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                    star: 200
-                },
-                {
-                    name: 'Nancy Hsi',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                    star: 160
-                },
-                {
-                    name: 'Eric Burke',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                    star: 150
-                },
-                {
-                    name: 'Li Zhang',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                    star: 100
-                },
-                {
-                    name: 'Lily Wolf',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                    star: 30
-                }
-            ],
-            requestlist: [
-                {
-                    name: 'Brette Bayne',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                    star: 430
-                },
-                {
-                    name: 'Joe Lee',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                    star: 420
-                },
-                {
-                    name: 'Yuki Iwashita',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                    star: 360
-                    
-                },
-                {
-                    name: 'Samathon Flam',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                    star: 320
-                },
-                {
-                    name: 'Sam Mohanmod',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                    star: 220
-                },
-                {
-                    name: 'bxie41',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                    star: 200
-                },
-                {
-                    name: 'Nancy Hsi',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                    star: 160
-                },
-                {
-                    name: 'Eric Burke',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                    star: 150
-                },
-                {
-                    name: 'Li Zhang',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                    star: 100
-                },
-                {
-                    name: 'Lily Wolf',
-                    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                    star: 30
-                }
-            ],
+            list: [],
+            requestList: [],
             user: {
-                name: 'bxie41',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                star: 200,
-                index: 6
+                name: '',
+                avatar_url: '',
+                star: 0,
+                index: '*'
             }
         }
     }
@@ -153,11 +51,54 @@ class FriendScreen extends Component {
         })
     }
 
+    componentDidMount = async () => {
+        let friends = await getFriends();
+        let userInfo = await getCurrentUserInfo();
+        let username = await getUsername(userInfo.userId);
+        userInfo['username'] = username.username;
+        let requests = await getRequestList();
+
+        // add the current user into the list
+        friends.push(userInfo);
+
+        let friendlist = friends.map(friend => {
+            let newFriend = {};
+            newFriend['userId'] = friend['userId'];
+            newFriend['name'] = friend['username'];
+            newFriend['avatar_url'] = getAvatar(friend['userId']);
+            newFriend['star'] = friend['totalStar'];
+
+            return newFriend;
+        });
+
+        // sort the friendlist
+        friendlist.sort((l, r) => r['star'] - l['star']);
+
+        // find his own position
+        var count = 1;
+        for (const friend of friendlist) {
+            if(friend.userId === userInfo.userId) {
+                break;
+            }
+            count++;
+        }
+
+        this.setState({
+            list: friendlist,
+            user: {
+                name: username.username,
+                avatar_url: getAvatar(userInfo.userId),
+                star: userInfo.totalStar,
+                index: count
+            }
+        });
+    }
+
     render() {
         return (
             <View style={styles.container}>
                 <FriendHeader {...this.props} title={this.state.title} popAddFriend={addFriendModal => this.popAddFriend(addFriendModal)}/>
-                <Modal  
+                <Modal
                     animationType={'fade'}
                     transparent={true}
                     visible={this.state.addFriendModal}
@@ -169,8 +110,8 @@ class FriendScreen extends Component {
                                 <Text style={{fontSize: 20}}>Add your friend by his/her Circle account</Text>
                             </View>
                             <View style={styles.search}>
-                                <Input 
-                                    placeholder='Username'  
+                                <Input
+                                    placeholder='Username'
                                     leftIcon={{ type: 'font-awesome', name: 'user', size: 25, color: '#d7d7d7' }}
                                     inputContainerStyle={{borderRadius: 5, borderWidth: 1, borderColor: '#d6d6d6'}}
                                     containerStyle={{marginHorizontal: 15}}
@@ -187,19 +128,19 @@ class FriendScreen extends Component {
                         </View>
                     </View>
                 </Modal>
-                <Modal  
+                <Modal
                     animationType={'slide'}
                     transparent={false}
                     visible={this.state.requestModal}
                     onRequestClose={()=>{}}
                 >
-                    <Header 
-                        leftComponent={ 
+                    <Header
+                        leftComponent={
                             <TouchableOpacity onPress={() => {
                                 this.setState({requestModal: false});
                             }}>
                                 <Icon name='times' size={25} color={'#4E4E4E'} />
-                            </TouchableOpacity> 
+                            </TouchableOpacity>
                         }
                         centerComponent={ <Text style={{color: '#000', fontSize: 25}}>Friend Requests</Text> }
                         containerStyle={{backgroundColor: '#FFF', shadowColor: 'transparent', borderBottomWidth: 1}}
@@ -227,9 +168,9 @@ class FriendScreen extends Component {
                     />
                 </Modal>
                 <View style={styles.userContainer}>
-                    <Avatar rounded source={{uri: this.state.user.avatar_url }} size={BASE_HEIGHT / 5 - 20} containerStyle={{position: 'absolute', top: -30}}/>
+                    <Avatar rounded source={{uri: this.state.user.avatar_url }} size={BASE_HEIGHT / 5 - 25} containerStyle={{position: 'absolute', top: -30}}/>
                     <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                        <Text style={{fontSize: 22.5, marginRight: BASE_WIDTH / 2}}>{this.state.user.name}</Text>
+                        <Text style={{fontSize: 18, marginRight: BASE_WIDTH / 2}}>{this.state.user.name}</Text>
                         <Text style={{fontSize: 18, color: '#000', height: 25, backgroundColor: '#F0F0F0', paddingTop: 2, paddingHorizontal: 10, borderRadius: 10, overflow: 'hidden'}}>
                             {this.state.user.star+ ' '}
                             <Icon name='star' size={18} color={'#C5AFDD'} />

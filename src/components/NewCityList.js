@@ -10,12 +10,12 @@ class NewCityList extends Component {
         super(props)
 
         console.log(props)
-        this.travelCallback = props.travelCallback
+        this.unlockCallback = props.unlockCallback
         this.locateCallback = props.locateCallback
     }
 
     onTravelClick = (e, city) => {
-        this.travelCallback(e, city)
+        this.unlockCallback(e, city)
     }
 
     onLocateClik = (e, city) => {
@@ -44,7 +44,7 @@ class NewCityList extends Component {
                                 }
                                 rightElement={<Image
                                     style={{ alignSelf:'flex-start', width: 80, height: 80, borderRadius: 5 }}
-                                    source={rectBuilding}
+                                    source={{ uri: city.image}}
                                 />}
                             />
                         </Card>

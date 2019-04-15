@@ -239,8 +239,8 @@ class CircleSlider extends Component {
                 <Avatar
                     size={218}
                     rounded
-                    source={building}
-                    containerStyle={{position: 'absolute', top: 33}}
+                    source={this.props.image? {uri: this.props.image} : building}
+                    containerStyle={{position: 'absolute', top: 33, overflow: 'hidden'}}
                 />
                 <Svg onLayout={this.doStuff} ref="circleslider" width={width} height={width}>
                     <Defs>

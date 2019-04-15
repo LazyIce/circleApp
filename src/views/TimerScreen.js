@@ -4,6 +4,7 @@ import { API } from 'aws-amplify'
 import TimerHeader from './../components/TimerHeader'
 import CircularSlider from './../components/CircularSlider'
 import { DeviceEventEmitter } from 'react-native'
+import { getCurrentUserInfo, getCity, addTravelTime } from './../APIs'
 
 const BASE_WIDTH = Dimensions.get('window').width
 const BASE_HEIGHT = Dimensions.get('window').height
@@ -12,59 +13,36 @@ class TimerScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            stars: 1,
-            currentCity: 'Atlanta',
-            cityCompleting: '232',
-            cityCompleted: '30k',
+            stars: 0,
+            currentCity: '***',
+            cityCompleting: '0',
+            cityCompleted: '0',
         }
     }
 
-    // _fetchData = () => {
-    //     let apiName = 'circleApp'
-    //     let path = '/info/object/:userId'
-    //     API.get(apiName, path).then(response => {
-    //         console.log(response)
-    //         // response: {userId: , stars: , currentCity: }
-    //         this.setState({
-    //             // stars: response.stars || 1,
-    //             // currentCity: response.currentCity || '',
-    //             stars: response.stars || 1,
-    //             currentCity: response.currentCity || '',
-    //             cityCompleting: '232',
-    //             cityCompleted: '30k',
-    //         })
-    //     }).catch(error => {
-    //         console.log(error)
-    //     })
-    // }
+    _fetchData = async () => {
+        let userInfo = await getCurrentUserInfo();
+        let cityId = userInfo['curCityId'];
+        let cityInfo = await getCity(cityId);
+        console.log(cityInfo)
 
-    componentDidMount = () => {
-        // this._fetchData()
+        this.setState({
+            stars: userInfo.curStar || 0,
+            currentCity: cityInfo.name || '***',
+            cityCompleting: cityInfo.curCharityGoal || '0',
+            cityCompleted: cityInfo.totalChariyGoal || '0',
+            sliderImage: cityInfo.imageCircle
+        })
+    }
+
+    componentDidMount = async () => {
+        this._fetchData()
         DeviceEventEmitter.addListener('refreshTimerScreen', this._fetchData)
     }
 
-    updateStarCount(count) {
-        console.log(count)
-        this.setState({stars: count})
-    }
-
-    timerSucceedCallback = (addedStar) => {
-        // let apiName = 'circleApp'
-        newStar = this.state.stars + addedStar
-        this.updateStarCount(newStar)
-        // let path = '/info'
-        // let newStar = this.state.stars || 0 + addedStar
-        // let currentCity = this.state.currentCity
-        // console.log('post data, newStar: ' + newStar)
-        // API.post(apiName, path, {
-        //     body: {
-        //         userId: '',
-        //         stars: newStar,
-        //         currentCity: currentCity
-        //     }
-        // }).then(this.updateStarCount.bind(this, newStar)).catch(error => {
-        //     console.log(error)
-        // })
+    timerSucceedCallback = async (addedStar) => {
+        await addTravelTime(addedStar);
+        DeviceEventEmitter.emit('refreshTimerScreen', {})
     }
 
     render() {
@@ -77,7 +55,7 @@ class TimerScreen extends Component {
                         this.state.cityCompleting + '/' + this.state.cityCompleted + ' charity goal': ''}</Text>
                 </View>
                 <View style={styles.sliderContainer}>
-                    <CircularSlider timerSucceedCallback={this.timerSucceedCallback}/>
+                    <CircularSlider image={this.state.sliderImage} timerSucceedCallback={this.timerSucceedCallback}/>
                 </View>
             </View>
         )

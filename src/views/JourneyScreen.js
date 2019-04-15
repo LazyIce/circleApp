@@ -10,6 +10,7 @@ import VisitedCityList from './../components/VisitedCityList'
 import MyHeader from './../components/MyHeader'
 import { getScreenRegion } from './../Constants'
 import { DeviceEventEmitter } from 'react-native'
+import { getCityStates, getCurrentUserInfo, getAchievementList, travelToCity } from '../APIs';
 
 class JourneyScreen extends Component {
     constructor(props) {
@@ -18,8 +19,8 @@ class JourneyScreen extends Component {
             title: 'Journey',
             index: 0,
             routes: [
-                { key: 'first', title: 'NEW CITY 2' },
-                { key: 'second', title: 'VISITED CITY 4' }
+                { key: 'first', title: 'NEW CITY' },
+                { key: 'second', title: 'VISITED CITY' }
             ],
             startCount: 0,
             // the states for the display of tab titles
@@ -36,19 +37,38 @@ class JourneyScreen extends Component {
         }
     }
 
-    componentDidMount = () => {
-        let apiName = 'circleApp'
-        let path = '/journey'
-        API.get(apiName, path).then(response => {
-            let newCityCount = response.tabTitles.newCityCount
-            let visitedCityCount = response.tabTitles.visitedCityCount
-            response.routes = [
-                {key: 'first', title: 'NEW CITY ' + newCityCount},
-                {key: 'second', title: 'VISITED CITY ' + visitedCityCount},
-            ]
-            this.setState(response)
-        }).catch(error => {
-            console.log(error)
+    componentDidMount = async () => {
+        let cityStates = await getCityStates();
+        let userInfo = await getCurrentUserInfo();
+        let achievements = await getAchievementList();
+        let newCities = [];
+        let visitedCities = [];
+        for (var i = 0; i < cityStates.length; i++) {
+            var city = cityStates[i];
+            city['subTitle'] = 'Charity Goal ' + city['curCharityGoal'] + '/' + city['totalChariyGoal']
+            if (city.state === 'AFFORDABLE') {
+                newCities.push(city);
+            } else if (city.state === 'CURRENT_CITY' || city.state === 'VISITED') {
+                visitedCities.push(city);
+            }
+        }
+
+        this.setState({
+            starCount: userInfo.curStar,
+            routes: [
+                {key: 'first', title: 'NEW CITY ' + newCities.length},
+                {key: 'second', title: 'VISITED CITY ' + visitedCities.length}
+            ],
+            map: {
+                locations: cityStates
+            },
+            newCities: {
+                cities: newCities
+            },
+            visitedCities: {
+                cities: visitedCities,
+                achievements: achievements
+            }
         })
     }
 
@@ -62,32 +82,21 @@ class JourneyScreen extends Component {
         }))
     }
 
-    travelCallback = (e, city) => {
-        console.log(city)
-        let apiName = 'circleApp'
-        let path = '/info'
-        let newStar = this.state.starCount - city.starNeed
-        console.log('newStar: ' + newStar)
-        let currentCity = city.name
-        API.post(apiName, path, {
-            body: {
-                userId: '',
-                stars: newStar,
-                currentCity: currentCity
-            }
-        }).then(() => {
-            const {navigate} = this.props.navigation
-            navigate('Home')
-            DeviceEventEmitter.emit('refreshTimerScreen',  {})
-        }).catch(error => {
-            console.log(error)
-        })
+    travelCallback = async (e, city) => {
+        await travelToCity(city.cityId);
+        const {navigate} = this.props.navigation
+        navigate('Home')
+        DeviceEventEmitter.emit('refreshTimerScreen', {})
+    }
+
+    unlockCallback = async() => {
+        // TODO:
     }
 
     NewCityRoute = () => {
         return (
             <View style={styles.scene} >
-                <NewCityList travelCallback={this.travelCallback} locateCallback={this.locateCallback}
+                <NewCityList unlockCallback={this.unlockCallback} locateCallback={this.locateCallback}
                 {...this.props} {...this.state.newCities}/>
             </View>
         )
@@ -96,7 +105,7 @@ class JourneyScreen extends Component {
     VisitedCityRoute = () => {
         return (
             <View style={styles.scene}>
-                <VisitedCityList locateCallback={this.locateCallback}
+                <VisitedCityList travelCallback={this.travelCallback} locateCallback={this.locateCallback}
                 {...this.props} {...this.state.visitedCities}/>
             </View>
         )

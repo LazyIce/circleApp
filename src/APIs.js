@@ -6,7 +6,7 @@ export const getAchievementList = async () => {
     try {
         let ret = [];
         // get all the achievements
-        let response = await API.get(APIName, endpoints.ACHIEVEMENT_GET_LIST);
+        let response = await getAchievementListWithoutDetail();
 
         // get the postcards related to each achievement
         for (const achievement of response) {
@@ -14,12 +14,43 @@ export const getAchievementList = async () => {
 
             let card = JSON.parse(JSON.stringify(postcard));
             card['achieveTime'] = achievement.achieveTime;
+            card['userId'] = achievement.userId;
             ret.push(card);
         }
 
         return ret;
     } catch (e) {
         console.log(e);
+        throw 'getAchievementList error!'
+    }
+}
+
+// add one achievement for the current user
+export const addAchievement = async(postcardId) => {
+    try {
+        let body = {
+            postcardId: postcardId,
+            achieveTime: now()
+        }
+        await API.post(APIName, endpoints.ACHIEVEMENT_POST, {
+            body: body
+        });
+
+        return;
+    } catch (e) {
+        console.log(e);
+        throw 'addAchievement error!'
+    }
+}
+
+export const getAchievementListWithoutDetail = async () => {
+    try {
+        let response = await API.get(APIName, endpoints.ACHIEVEMENT_GET_LIST);
+
+        return response;
+    } catch (e) {
+        console.log(e);
+        throw 'getAhievementListWithoutDetail'
     }
 }
 
@@ -48,7 +79,6 @@ export const getPostcardList = async (cityId) => {
             }
         });
 
-        console.log(postcards);
         return postcards;
     } catch (e) {
         console.log(e);
@@ -65,10 +95,23 @@ export const getCity = async(cityId) => {
                 cityId: cityId
             }
         });
-        console.log(response)
         return response;
     } catch (e) {
         console.log(e);
+        throw 'getCity error!'
+    }
+}
+
+// update the city
+export const updateCity = async(city) => {
+    try {
+        await API.post(APIName, endpoints.CITY_POST, {
+            body: city
+        });
+        return;
+    } catch (e) {
+        console.log(e);
+        throw 'updateCity error!'
     }
 }
 
@@ -155,7 +198,7 @@ export const travelToCity = async(cityId) => {
         let visitedCityIds = visitedCities.map(city => city.cityId);
 
         // check whether the star count is valid
-        if (!visitedCities.includes(cityId)) {
+        if (!visitedCityIds.includes(cityId)) {
             throw 'The specified city is not visited!';
         }
 
@@ -170,13 +213,74 @@ export const travelToCity = async(cityId) => {
 // get statistics data for the current user
 // TODO: add different period supports
 export const getStatistics = async(period) => {
-    let chartData = [10, 20, 10, 20, 30, 15, 20, 10, 20, 10, 20, 30, 15, 20, 10, 20, 10, 20, 30, 15, 20, 10, 20, 10, 20, 30, 15, 20, 10, 5]
+    let cities = await API.get(APIName, endpoints.CITY_GET_LIST);
+    let allCities = [];
+    for (const city of cities) {
+        let newCity = JSON.parse(JSON.stringify(city));
+        newCity['latlng'] = { 'latitude': newCity.latitude, 'longitude': newCity.longitude }
+        allCities.push(newCity);
+    }
 
-    return {
-        data: chartData,
-        titles: [{ x: 0, text: '1' }, { x: 10, text: '10' }, { x: 20, text: '20' }],
-        verticalDividers: [0, 10, 20, 30],
-    };
+    if (period === 'today') {
+        let chartData = Array(24).fill(0)
+        chartData[16] = 1
+        return {
+            map: {
+                markers: allCities.slice(0, 2),
+            },
+            chartDescription: {
+                totalTime: '20m',
+                subTitile: '40m below average',
+            },
+            chartData: {
+                data: chartData,
+                titles: [{ x: 0, text: '12 AM' }, { x: 6, text: '6 AM' }, { x: 12, text: '12 PM' }, { x: 18, text: '6 PM' }],
+                verticalDividers: [0, 6, 12, 18, 24],
+            }
+        }
+    } else if (period === 'monthly') {
+        return {
+            map: {
+              markers: allCities.slice(0, 4),
+            },
+            chartDescription: {
+              totalTime: '100h',
+              subTitile: '20h above average',
+            },
+            chartData: {
+              data: [10, 20, 10, 20, 30, 15, 20, 10, 20, 10, 20, 30, 15, 20, 10, 20, 10, 20, 30, 15, 20, 10, 20, 10, 20, 30, 15, 20, 10, 5],
+              titles: [{ x: 0, text: '1' }, { x: 10, text: '10' }, { x: 20, text: '20' }],
+              verticalDividers: [0, 10, 20, 30],
+            }
+          }
+    } else {
+        return {
+            map: {
+                markers: allCities.slice(0, 3),
+            },
+            chartDescription: {
+                totalTime: '10h',
+                subTitile: '1h above average',
+            },
+            chartData: {
+                data: [10, 20, 10, 20, 30, 15, 20],
+                titles: [{ x: 0, text: 'Mon' },
+                { x: 1, text: 'Tue' },
+                { x: 2, text: 'Wed' },
+                { x: 3, text: 'Thu' },
+                { x: 4, text: 'Fri' },
+                { x: 5, text: 'Sat' },
+                { x: 6, text: 'Sun' }],
+                verticalDividers: [0, 1, 2, 3, 4, 5, 6],
+            },
+            charityGoals: {
+                data: [{ id: '0', title: 'Atlanta', goalState: 'Completed' },
+                { id: '1', title: 'Los Angeles', goalState: 'In Progress' },
+                { id: '2', title: 'Chicago', goalState: 'In Progress' },
+                { id: '3', title: 'Dallas', goalState: 'In Progress' }]
+            }
+        };
+    }
 }
 
 // update the user info in the back end
@@ -220,7 +324,6 @@ export const getUsername = async(userId) => {
             }
         });
 
-        console.log(user);
         return user;
     } catch (e) {
         console.log(e);
@@ -236,6 +339,7 @@ export const getCurrentUserInfo = async () => {
         return response;
     } catch (e) {
         console.log(e);
+        throw 'getCurrentUserInfo error!'
     }
 }
 
@@ -243,16 +347,23 @@ export const getCurrentUserInfo = async () => {
 export const addTravelTime = async(seconds) => {
     try {
         let userInfo = await getCurrentUserInfo();
+        let cityId = userInfo['curCityId'];
+        let city = await getCity(cityId);
 
         // update some fields
         userInfo['curStar'] += seconds;
         userInfo['totalStar'] += seconds;
         userInfo['totalTime'] += seconds;
 
-        let response = await updateUserInfo(userInfo);
-        return response;
+        // add the charity goal for the city
+        city['curCharityGoal'] += seconds;
+        await updateUserInfo(userInfo);
+        await updateCity(city);
+
+        return;
     } catch (e) {
         console.log(e);
+        throw 'addTravelTime error!'
     }
 }
 
@@ -321,15 +432,12 @@ export const requestFriend = async(toUserId) => {
 }
 
 // get the users who send the friend request to me and their infos
-export const requestList = async() => {
+export const getRequestList = async() => {
     try {
         let ret = [];
         let requests = await API.get(APIName, endpoints.FRIENDREQUEST_GET_LIST);
-        console.log(requests);
 
-        // get the postcards related to each achievement
         for (const request of requests) {
-            console.log(request.friendUserId);
             let userInfo = await getUserInfo(request.friendUserId);
             let username = await getUsername(request.friendUserId);
             userInfo['username'] = username['username'];
@@ -337,7 +445,6 @@ export const requestList = async() => {
             ret.push(userInfo);
         }
 
-        console.log(ret);
         return ret;
     } catch (e) {
         console.log(e);
@@ -350,7 +457,6 @@ export const addFriend = async(friendUserId) => {
     try {
         // change the friend request state
         let currentInfo = await Auth.currentUserInfo();
-        console.log(currentInfo);
         await API.post(APIName, endpoints.FRIENDREQUEST_POST, {
             body: {
                 friendUserId: friendUserId,
