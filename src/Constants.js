@@ -95,4 +95,11 @@ export const endpoints = {
     CITY_GET_LIST: '/city/:cityId',
     INFO_GET_SINGLE: '/info/object/:userId',
     INFO_POST: '/info',
+    USER_SEARCH: '/user/:username',
+    USER_GET_SINGLE: '/user/object/:userId',
+    USER_ADD_MAPPING: '/user',
+    FRIENDSHIP_GET_LIST: '/friendship/:userId',
+    FRIENDSHIP_POST: '/friendship',
+    FRIENDREQUEST_POST: '/friendrequest',
+    FRIENDREQUEST_GET_LIST: '/friendrequest/:userId'
 }
