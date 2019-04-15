@@ -1,5 +1,5 @@
 import { APIName, endpoints, now } from './Constants'
-import { API } from 'aws-amplify'
+import { API, Auth } from 'aws-amplify'
 
 // return all the postcards achieved by the current user
 export const getAchievementList = async () => {
@@ -48,6 +48,7 @@ export const getPostcardList = async (cityId) => {
             }
         });
 
+        console.log(postcards);
         return postcards;
     } catch (e) {
         console.log(e);
@@ -64,7 +65,7 @@ export const getCity = async(cityId) => {
                 cityId: cityId
             }
         });
-
+        console.log(response)
         return response;
     } catch (e) {
         console.log(e);
@@ -178,6 +179,7 @@ export const getStatistics = async(period) => {
     };
 }
 
+// update the user info in the back end
 export const updateUserInfo = async(userInfo) => {
     try {
         let response = await API.post(APIName, endpoints.INFO_POST, {
@@ -205,6 +207,24 @@ export const getUserInfo = async(userId) => {
     } catch (e) {
         console.log(e);
         throw 'getUserInfo error!';
+    }
+}
+
+// it is a stupid design; I agree
+// but it is for getting the username by userid
+export const getUsername = async(userId) => {
+    try {
+        let user = await API.get(APIName, endpoints.USER_GET_SINGLE, {
+            queryStringParameters: {
+                userId: userId
+            }
+        });
+
+        console.log(user);
+        return user;
+    } catch (e) {
+        console.log(e);
+        throw 'getUsername error!'
     }
 }
 
@@ -236,20 +256,124 @@ export const addTravelTime = async(seconds) => {
     }
 }
 
-// search users by the userName
-export const searchUser = async(userName) => {
+// the user will start his journey from this city
+export const initUser = async (cityId) => {
+    try {
+        // add the username and userId mapping
+        let userinfo = await Auth.currentUserInfo();
+        let userMapping = {username: userinfo.username};
+        await API.post(APIName, endpoints.USER_ADD_MAPPING, {
+            body: userMapping
+        });
+        // update the user info
+        let userInfo = {};
+        userInfo['curStar'] = 0;
+        userInfo['totalStar'] = 0;
+        userInfo['totalTime'] = 0;
+        userInfo['curCityId'] = cityId;
+        await updateUserInfo(userInfo);
 
+        // add the visited city
+        let visited = {};
+        visited['cityId'] = cityId;
+        visited['cityTravelTime'] = now();
+        await API.post(APIName, endpoints.VISITEDCITY_POST, {
+            body: visited
+        });
+    } catch (e) {
+        console.log(e);
+        throw 'initUser error!'
+    }
+}
+
+// search users by the username
+export const searchUser = async(username) => {
+    try {
+        let user = await API.get(APIName, endpoints.USER_SEARCH, {
+            queryStringParameters: {
+                username: username
+            }
+        })
+
+        return user;
+    } catch (e) {
+        console.log(e);
+        throw 'searchUser error!'
+    }
 }
 
 // request adding one friend
-export const requestFriend = async(friendUserId) => {
+export const requestFriend = async(toUserId) => {
+    try {
+        let currentInfo = await Auth.currentUserInfo();
+        let body = {};
+        body['userId'] = toUserId;
+        body['state'] = 'NEW';
+        body['friendUserId'] = currentInfo['id'];
+        let response = await API.post(APIName, endpoints.FRIENDREQUEST_POST, {
+            body: body
+        });
+        return;
+    } catch (e) {
+        console.log(e);
+        throw 'requestFriend error!'
+    }
+}
 
+// get the users who send the friend request to me and their infos
+export const requestList = async() => {
+    try {
+        let ret = [];
+        let requests = await API.get(APIName, endpoints.FRIENDREQUEST_GET_LIST);
+        console.log(requests);
+
+        // get the postcards related to each achievement
+        for (const request of requests) {
+            console.log(request.friendUserId);
+            let userInfo = await getUserInfo(request.friendUserId);
+            let username = await getUsername(request.friendUserId);
+            userInfo['username'] = username['username'];
+
+            ret.push(userInfo);
+        }
+
+        console.log(ret);
+        return ret;
+    } catch (e) {
+        console.log(e);
+        throw 'requestList error!'
+    }
 }
 
 // add one friend
 export const addFriend = async(friendUserId) => {
     try {
+        // change the friend request state
+        let currentInfo = await Auth.currentUserInfo();
+        console.log(currentInfo);
+        await API.post(APIName, endpoints.FRIENDREQUEST_POST, {
+            body: {
+                friendUserId: friendUserId,
+                userId: currentInfo['id'],
+                state: 'APPROVED'
+            }
+        });
 
+        // add the friend to each other
+        await API.post(APIName, endpoints.FRIENDSHIP_POST, {
+            body: {
+                userId: currentInfo['id'],
+                friendUserId: friendUserId
+            }
+        })
+        await API.post(APIName, endpoints.FRIENDSHIP_POST, {
+            body: {
+                friendUserId: currentInfo['id'],
+                userId: friendUserId
+            }
+        })
+
+        return;
     } catch (e) {
         console.log(e);
         throw 'addFriend error!'
@@ -260,9 +384,18 @@ export const addFriend = async(friendUserId) => {
 export const getFriends = async() => {
     try {
         let ret = [];
+        let friends = await API.get(APIName, endpoints.FRIENDSHIP_GET_LIST);
 
-        // get all the friends
+        // get the friend info
+        for (const friend of friends) {
+            let friendInfo = await getUserInfo(friend.friendUserId);
+            let username = await getUsername(friend.friendUserId);
+            friendInfo['username'] = username['username'];
 
+            ret.push(friendInfo);
+        }
+
+        return ret;
     } catch (e) {
         console.log(e);
         throw 'getFriends error!'
