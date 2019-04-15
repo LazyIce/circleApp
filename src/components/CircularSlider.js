@@ -20,8 +20,9 @@ class CircleSlider extends Component {
             xCenter: 0,
             yCenter: 0,
             seconds: 0,
+            minutes: 5,
             btnTitle: 'Travel',
-            starVal: 1,
+            starVal: 5,
             appstate: AppState.currentState,
             hideSlider: false
         };
@@ -43,7 +44,7 @@ class CircleSlider extends Component {
                 let xOrigin = this.state.xCenter - (this.props.dialRadius + this.props.btnRadius);
                 let yOrigin = this.state.yCenter - (this.props.dialRadius + this.props.btnRadius);
                 let a = this.cartesianToPolar(gs.moveX - xOrigin, gs.moveY - yOrigin);
-                this.setState({angle: a, starVal: a});
+                this.setState({angle: a, starVal: a / 3, minutes: this.getStep(a/3) });
             }
         });
     }
@@ -60,7 +61,7 @@ class CircleSlider extends Component {
             if (this.state.btnTitle === 'GiveUp' && Math.round(new Date().getTime() - this.backgroundTime) > 6000) {
                 this._timer&&clearInterval(this._timer);
                 Alert.alert('You failed!');
-                this.setState({btnTitle: 'Travel', starVal: 1, angle: this.props.startCoord, seconds: 0, hideSlider: false});
+                this.setState({btnTitle: 'Travel', starVal: 5, angle: this.props.value, seconds: 0, minutes: 5, hideSlider: false});
             }
         }
         this.setState({appState: nextAppState});
@@ -103,21 +104,21 @@ class CircleSlider extends Component {
     }
 
     get_minutes() {
-        let mt = this.state.angle;
+        let mt = this.state.minutes;
         if (mt > 0) {
             mt--;
-            this.setState({angle: mt});
+            this.setState({angle: mt, minutes: mt});
             return 1;
         }
         else if (mt == 0) {
-            this.setState({angle: 0});
+            this.setState({angle: 0, minutes: 0});
             return 0;
         }
     }
 
     // called when user finish one timer successfully
     timerSucceed = () => {
-        this.timerSucceedCallback(this.state.starVal)
+        this.timerSucceedCallback(this.getStep(this.state.starVal))
     }
 
     countTime() {
@@ -137,11 +138,11 @@ class CircleSlider extends Component {
                   }
                   else if (get_mt == 0) {
                     this._timer&&clearInterval(this._timer);
-                    this.setState({btnTitle: 'Share', starVal: 1, angle: this.props.startCoord});
+                    this.setState({btnTitle: 'Share', starVal: 5, angle: this.props.value, minutes: 5});
                     this.timerSucceed();
                   }
                 }
-            }, 100);
+            }, 10);
         } else if (this.state.btnTitle === 'GiveUp') {
             Alert.alert('Are you sure you want to give up?', 'You will not receive the stars for this session', [
                 {text: 'Yes, I give up', onPress: () => {
@@ -155,7 +156,7 @@ class CircleSlider extends Component {
                 }
             ]);
         } else if (this.state.btnTitle === 'Restart') {
-            this.setState({btnTitle: 'Travel', hideSlider: false, starVal: 1, angle: this.props.startCoord, seconds: 0});
+            this.setState({btnTitle: 'Travel', hideSlider: false, starVal: 5, angle: this.props.value, minutes: 5, seconds: 0});
         } else {
             this._shareText()
         }
@@ -187,6 +188,14 @@ class CircleSlider extends Component {
         }
     }
 
+    getStep(x) {
+        if (x % 5 == 0)
+            return x;
+        else {
+            return x - x % 5;
+        }
+    }
+
     renderSwitch() {
         if(this.state.btnTitle === 'Restart') {
             return (
@@ -195,7 +204,7 @@ class CircleSlider extends Component {
                         You are stuck here!
                     </Text>
                     <Text style={styles.starText}>
-                        You didn't get {Math.round(this.state.starVal) + ' '}
+                        You didn't get {this.getStep(this.state.starVal) + ' '}
                         <Icon name='star' size={18} color={'#C5AFDD'} />
                     </Text>
                 </View>
@@ -207,7 +216,7 @@ class CircleSlider extends Component {
                         Congrats!
                     </Text>
                     <Text style={styles.starText}>
-                        You earned {Math.round(this.state.starVal) + ' '}
+                        You earned {this.getStep(this.state.starVal) + ' '}
                         <Icon name='star' size={18} color={'#C5AFDD'} />
                     </Text>
                 </View>
@@ -216,10 +225,10 @@ class CircleSlider extends Component {
             return (
                 <View style={styles.hintContainer}>
                     <Text style={styles.timeText}>
-                        {this.props.onValueChange(Math.round(this.state.angle/360*this.props.maxValue))}:{this.state.seconds < 10 ? '0' + this.state.seconds : this.state.seconds}
+                        {this.state.minutes}:{this.state.seconds < 10 ? '0' + this.state.seconds : this.state.seconds}
                     </Text>
                     <Text style={styles.starText}>
-                        You will get {Math.round(this.state.starVal) + ' '}
+                        You will get {this.getStep(this.state.starVal) + ' '}
                         <Icon name='star' size={18} color={'#C5AFDD'} />
                     </Text>
                 </View>
@@ -279,7 +288,7 @@ class CircleSlider extends Component {
                 <View style={styles.btnContainer}>
                     {
                         this.state.btnTitle === 'Share' ?
-                        <Button buttonStyle={styles.button} titleStyle={styles.btnFont} title='Restart' onPress={ () => this.setState({btnTitle: 'Travel', hideSlider: false, starVal: 1, angle: this.props.startCoord, seconds: 0})} /> :
+                        <Button buttonStyle={styles.button} titleStyle={styles.btnFont} title='Restart' onPress={ () => this.setState({btnTitle: 'Travel', hideSlider: false, starVal: 5, angle: this.props.value, seconds: 0, minutes: 5})} /> :
                         null
                     }
                     <Button buttonStyle={styles.button} titleStyle={styles.btnFont} title={this.state.btnTitle} onPress={this.countTime.bind(this)} />
@@ -332,8 +341,8 @@ CircleSlider.defaultProps = {
     btnRadius: 20,
     dialRadius: 120,
     dialWidth: 25,
-    value: 1,
-    maxValue: 360,
+    value: 15,
+    maxValue: 120,
     xCenter: BASE_WIDTH / 2,
     yCenter: BASE_HEIGHT / 2,
     startGradient: '#D5C0EF',
