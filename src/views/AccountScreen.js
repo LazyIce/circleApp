@@ -26,7 +26,17 @@ class AccountScreen extends Component {
         }
     }
 
-    componentDidMount = async() => {
+    componentDidMount = async () => {
+        this._fetchData()
+        this.willFocus = this.props.navigation.addListener(
+            'didFocus',
+            () => {
+                this._fetchData();
+            }
+        )
+    }
+
+    _fetchData = async() => {
         let visited = await getVisitedCities();
         let userInfo = await getCurrentUserInfo();
         let username = await getUsername(userInfo.userId);

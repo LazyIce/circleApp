@@ -52,11 +52,11 @@ class InitScreen extends Component {
                     <Button
                         buttonStyle={styles.button}
                         titleStyle={styles.btnFont}
-                        title="CHOOSE ATLANTA"
+                        title="CHOOSE ATLANTA "
                         icon={
                             <Icon
                                 name="map-marker"
-                                size={15}
+                                size={20}
                                 color="white"
                             />
                         }

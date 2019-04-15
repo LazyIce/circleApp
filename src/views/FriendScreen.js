@@ -3,7 +3,7 @@ import { FlatList, View, Text, StyleSheet, Dimensions, Modal, TouchableOpacity, 
 import { Avatar, Input, Button, Header } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import FriendHeader from './../components/FriendHeader'
-import { getFriends, getRequestList, getCurrentUserInfo, getUsername } from '../APIs';
+import { addFriend, getFriends, getRequestList, getCurrentUserInfo, getUsername, requestFriend, searchUser, rejectFriend } from '../APIs';
 import { getAvatar } from '../Constants';
 
 const BASE_WIDTH = Dimensions.get('window').width
@@ -15,11 +15,12 @@ class FriendScreen extends Component {
 
         this.state = {
             title: 'Friend',
+            searchname: '',
             addFriendModal: false,
             requestModal: false,
             requestNumber: 0,
             list: [],
-            requestList: [],
+            requestlist: [],
             user: {
                 name: '',
                 avatar_url: '',
@@ -35,28 +36,54 @@ class FriendScreen extends Component {
         })
     }
 
-    accecptRequest(index) {
+    accecptRequest = async (index) => {
         let requestlist = this.state.requestlist;
+        let request = requestlist[index];
+        await addFriend(request['userId']);
         requestlist.splice(index, 1);
         this.setState({
-            requestlist: requestlist
+            requestlist: requestlist,
+            requestNumber: requestlist.length
         })
     }
 
-    rejectRequest(index) {
+    rejectRequest = async (index) => {
         let requestlist = this.state.requestlist;
+        let request = requestlist[index];
+        await rejectFriend(request['userId']);
         requestlist.splice(index, 1);
         this.setState({
-            requestlist: requestlist
+            requestlist: requestlist,
+            requestNumber: requestlist.length
         })
     }
 
-    componentDidMount = async () => {
+    componentDidMount = () => {
+        this._fetchData()
+        this.willFocus = this.props.navigation.addListener(
+            'didFocus',
+            () => {
+                this._fetchData();
+            }
+        )
+    }
+
+    _fetchData = async () => {
         let friends = await getFriends();
         let userInfo = await getCurrentUserInfo();
         let username = await getUsername(userInfo.userId);
         userInfo['username'] = username.username;
         let requests = await getRequestList();
+        console.log(requests);
+        let requestList = requests.filter(request => request['state'] === 'NEW').map(request => {
+            let newRequest = {};
+            newRequest['userId'] = request['userId'];
+            newRequest['name'] = request['username'];
+            newRequest['avatar_url'] = getAvatar(request['userId']);
+            newRequest['star'] = request['totalStar'];
+
+            return newRequest;
+        });
 
         // add the current user into the list
         friends.push(userInfo);
@@ -90,7 +117,9 @@ class FriendScreen extends Component {
                 avatar_url: getAvatar(userInfo.userId),
                 star: userInfo.totalStar,
                 index: count
-            }
+            },
+            requestlist: requestList,
+            requestNumber: requestList.length
         });
     }
 
@@ -116,13 +145,20 @@ class FriendScreen extends Component {
                                     inputContainerStyle={{borderRadius: 5, borderWidth: 1, borderColor: '#d6d6d6'}}
                                     containerStyle={{marginHorizontal: 15}}
                                     leftIconContainerStyle={{marginRight: 5}}
+                                    onChangeText={(searchname) => this.setState({searchname})}
+                                    value={this.state.searchname}
                                 />
                             </View>
                             <View style={styles.btnGroup}>
                                 <Button title="Cancel" buttonStyle={styles.button} onPress={() => {this.popAddFriend(false)}} />
-                                <Button title="Add" buttonStyle={styles.button} onPress={()=> {
-                                    // send request
+                                <Button title="Add" buttonStyle={styles.button} onPress={async ()=> {
                                     this.popAddFriend(false);
+                                    // send request
+                                    let searchname = this.state.searchname;
+                                    if (searchname !== '') {
+                                        let users = await searchUser(searchname);
+                                        await requestFriend(users[0].userId);
+                                    }
                                 }} />
                             </View>
                         </View>
@@ -154,7 +190,9 @@ class FriendScreen extends Component {
                                     <Avatar rounded source={{uri: item.avatar_url }} size={BASE_HEIGHT / 10 - 20} />
                                     <Text style={{ width: BASE_WIDTH / 3, fontSize: 20}}>{item.name}</Text>
                                     <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: BASE_WIDTH / 4}}>
-                                        <TouchableOpacity onPress={() => {this.accecptRequest(index)}} >
+                                        <TouchableOpacity onPress={() => {
+                                            this.accecptRequest(index)
+                                            }} >
                                             <Icon name='check-circle' size={30} color={'#6dc030'} />
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => {this.rejectRequest(index)}}>

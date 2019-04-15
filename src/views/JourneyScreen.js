@@ -10,7 +10,7 @@ import VisitedCityList from './../components/VisitedCityList'
 import MyHeader from './../components/MyHeader'
 import { getScreenRegion } from './../Constants'
 import { DeviceEventEmitter } from 'react-native'
-import { getCityStates, getCurrentUserInfo, getAchievementList, travelToCity } from '../APIs';
+import { getCityStates, getCurrentUserInfo, getAchievementList, travelToCity, unlockCity} from '../APIs';
 
 class JourneyScreen extends Component {
     constructor(props) {
@@ -37,7 +37,7 @@ class JourneyScreen extends Component {
         }
     }
 
-    componentDidMount = async () => {
+    _fetchData = async () => {
         let cityStates = await getCityStates();
         let userInfo = await getCurrentUserInfo();
         let achievements = await getAchievementList();
@@ -72,6 +72,16 @@ class JourneyScreen extends Component {
         })
     }
 
+    componentDidMount = async () => {
+        this._fetchData()
+        this.willFocus = this.props.navigation.addListener(
+            'didFocus',
+            () => {
+                this._fetchData();
+            }
+        )
+    }
+
     // city includes the longitude and latitude information
     locateCallback = (e, city) => {
         this.setState((state, props) => ({
@@ -89,8 +99,12 @@ class JourneyScreen extends Component {
         DeviceEventEmitter.emit('refreshTimerScreen', {})
     }
 
-    unlockCallback = async() => {
-        // TODO:
+    unlockCallback = async(e, city) => {
+        await unlockCity(city.cityId);
+        await travelToCity(city.cityId);
+        const {navigate} = this.props.navigation
+        navigate('Home')
+        DeviceEventEmitter.emit('refreshTimerScreen', {})
     }
 
     NewCityRoute = () => {
@@ -101,7 +115,7 @@ class JourneyScreen extends Component {
             </View>
         )
     }
-    
+
     VisitedCityRoute = () => {
         return (
             <View style={styles.scene}>

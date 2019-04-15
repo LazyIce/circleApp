@@ -26,6 +26,16 @@ class AchievementScreen extends Component {
     }
 
     componentDidMount = async () => {
+        this._fetchData()
+        this.willFocus = this.props.navigation.addListener(
+            'didFocus',
+            () => {
+                this._fetchData();
+            }
+        )
+    }
+
+    _fetchData = async () => {
         await addAchievement('be9af5e2-3b78-46e0-b379-80ba1e4ce0dd');
         let achievements = await getAchievementList();
         console.log(achievements);

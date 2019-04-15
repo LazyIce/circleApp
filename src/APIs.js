@@ -346,6 +346,7 @@ export const getCurrentUserInfo = async () => {
 // add the seconds of timer to the current user
 export const addTravelTime = async(seconds) => {
     try {
+        seconds *= 1000;
         let userInfo = await getCurrentUserInfo();
         let cityId = userInfo['curCityId'];
         let city = await getCity(cityId);
@@ -441,6 +442,7 @@ export const getRequestList = async() => {
             let userInfo = await getUserInfo(request.friendUserId);
             let username = await getUsername(request.friendUserId);
             userInfo['username'] = username['username'];
+            userInfo['state'] = request['state'];
 
             ret.push(userInfo);
         }
@@ -449,6 +451,25 @@ export const getRequestList = async() => {
     } catch (e) {
         console.log(e);
         throw 'requestList error!'
+    }
+}
+
+export const rejectFriend = async(friendUserId) => {
+    try {
+        // change the friend request state
+        let currentInfo = await Auth.currentUserInfo();
+        await API.post(APIName, endpoints.FRIENDREQUEST_POST, {
+            body: {
+                friendUserId: friendUserId,
+                userId: currentInfo['id'],
+                state: 'REJECTED'
+            }
+        });
+
+        return;
+    } catch (e) {
+        console.log(e);
+        throw 'rejectFriend error!'
     }
 }
 
