@@ -25,10 +25,6 @@ export const keys = {
     'flickr': '1da35bb5f8888aca46cb54dca008a6f6',
 }
 
-export const endpoints = {
-    'getInfo': '/info/object/:userId'
-}
-
 export const objToQueryString = (obj) => {
     const keyValuePairs = [];
     for(const key in obj) {
@@ -43,6 +39,10 @@ export const defaultMapRegion = {
     longitude: -95.7129,
     latitudeDelta: 20.0,
     longitudeDelta: 45.0,
+}
+
+export const now = () => {
+    return new Date().toLocaleString();
 }
 
 // given cities return the region in the map to display them
@@ -79,4 +79,54 @@ export const getScreenRegion = (markerList) => {
         latitudeDelta: Math.max((top - bottom) * 1.5, 89),
         longitudeDelta: Math.max((right - left) * 1.5, 179),
     }
+}
+
+export const APIName = "circleApp"
+
+// the endpoints for API calls
+export const endpoints = {
+    POSTCARD_GET_SINGLE: '/postcard/object/:postcardId',
+    POSTCARD_GET_LIST: '/postcard/:cityId',
+    ACHIEVEMENT_GET_LIST: '/achievement/:userId',
+    ACHIEVEMENT_POST: '/achievement',
+    VISITEDCITY_POST: '/visitedCity',
+    VISITEDCITY_GET_LIST: '/visitedCity/:userId',
+    CITY_GET_SINGLE: '/city/object/:cityId',
+    CITY_GET_LIST: '/city/:cityId',
+    CITY_POST: '/city',
+    INFO_GET_SINGLE: '/info/object/:userId',
+    INFO_POST: '/info',
+    USER_SEARCH: '/user/:username',
+    USER_GET_SINGLE: '/user/object/:userId',
+    USER_ADD_MAPPING: '/user',
+    FRIENDSHIP_GET_LIST: '/friendship/:userId',
+    FRIENDSHIP_POST: '/friendship',
+    FRIENDREQUEST_POST: '/friendrequest',
+    FRIENDREQUEST_GET_LIST: '/friendrequest/:userId'
+}
+
+// the id of the starting city
+export const INIT_CITY_ID = 'b71be726-e404-4e23-9c81-c8f769fa106a';
+
+// randomly hash the avatar
+hashCode = function() {
+    var hash = 0, i, chr;
+    if (this.length === 0) return hash;
+    for (i = 0; i < this.length; i++) {
+      chr   = this.charCodeAt(i);
+      hash  = ((hash << 5) - hash) + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+  };
+export const getAvatar = (userId) => {
+    const images = [
+        'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+        'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+        'https://s3.amazonaws.com/uifaces/faces/twitter/olegpogodaev/128.jpg',
+        'https://s3.amazonaws.com/uifaces/faces/twitter/calebogden/128.jpg',
+    ];
+
+    let hashed = hashCode(userId);
+    return images[Math.floor(hashed / images.length)]
 }

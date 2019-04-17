@@ -57,7 +57,7 @@ class JourneyMap extends Component {
           {locationDetails &&
             locationDetails.map((locationDetail, index) => (
               <Marker key={index} coordinate={locationDetail.latlng}>
-                {locationDetail.state === 'CURRENT_CITY' &&
+                {(locationDetail.state === 'CURRENT_CITY' || locationDetail.state === 'VISITED') &&
                   <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                     <Icon name='map-marker' size={18} color={colors.purple} />
                     <Text style={{}}>{locationDetail.name}</Text>

@@ -204,7 +204,7 @@ class CircleSlider extends Component {
                         You are stuck here!
                     </Text>
                     <Text style={styles.starText}>
-                        You didn't get {this.getStep(this.state.starVal) + ' '}
+                        You didn't get {this.getStep(this.state.starVal) * 1000 + ' '}
                         <Icon name='star' size={18} color={'#C5AFDD'} />
                     </Text>
                 </View>
@@ -216,7 +216,7 @@ class CircleSlider extends Component {
                         Congrats!
                     </Text>
                     <Text style={styles.starText}>
-                        You earned {this.getStep(this.state.starVal) + ' '}
+                        You earned {this.getStep(this.state.starVal) * 1000 + ' '}
                         <Icon name='star' size={18} color={'#C5AFDD'} />
                     </Text>
                 </View>
@@ -228,7 +228,7 @@ class CircleSlider extends Component {
                         {this.state.minutes}:{this.state.seconds < 10 ? '0' + this.state.seconds : this.state.seconds}
                     </Text>
                     <Text style={styles.starText}>
-                        You will get {this.getStep(this.state.starVal) + ' '}
+                        You will get {this.getStep(this.state.starVal)*1000 + ' '}
                         <Icon name='star' size={18} color={'#C5AFDD'} />
                     </Text>
                 </View>
@@ -248,8 +248,8 @@ class CircleSlider extends Component {
                 <Avatar
                     size={218}
                     rounded
-                    source={building}
-                    containerStyle={{position: 'absolute', top: 33}}
+                    source={this.props.image? {uri: this.props.image}: building}
+                    containerStyle={{position: 'absolute', top: 33, overflow: "hidden"}}
                 />
                 <Svg onLayout={this.doStuff} ref="circleslider" width={width} height={width}>
                     <Defs>

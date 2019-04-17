@@ -7,6 +7,7 @@ import CharityGoalList from './../components/CharityGoalList'
 import TimeChart from './../components/TimeChart'
 import { colors } from './../Constants';
 import MyHeader from './../components/MyHeader'
+import { getStatistics } from '../APIs';
 
 class StatisticScreen extends Component {
     constructor(props) {
@@ -26,18 +27,13 @@ class StatisticScreen extends Component {
         this.inited = false
     }
 
-    fetchData = (selectedIndex) => {
+    fetchData = async (selectedIndex) => {
         const paths = ['allTime', 'today', 'weekly', 'monthly']
-        let apiName = 'circleApp'
-        let path = '/statistics/' + paths[selectedIndex]
         if(!this.inited || selectedIndex !== this.state.selectedIndex) {
-            API.get(apiName, path).then(response => {
-                this.inited = true
-                response.selectedIndex = selectedIndex
-                this.setState(response)
-            }).catch(error => {
-                console.log(error)
-            })
+            let response = await getStatistics(paths[selectedIndex]);
+            this.inited = true
+            response.selectedIndex = selectedIndex
+            this.setState(response);
         }
     }
 
@@ -83,11 +79,6 @@ class StatisticScreen extends Component {
                             <TimeChart {...this.state.chartData}/>
                         </View>
                     </View>
-                    <View style={[styles.container, styles.overviewSection]}>
-                        <Text style={[styles.overviewText, styles.overviewSectionTitle]}>{'Charity Goals You\'ve Participated'}</Text>
-                        <CharityGoalList {...this.state.charityGoals}/>
-                    </View>
-
                 </ScrollView>
             </View>
        )

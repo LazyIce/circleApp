@@ -5,6 +5,8 @@ import TimerHeader from './../components/TimerHeader'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { StackActions, NavigationActions } from 'react-navigation';
 import { building } from './../img_path'
+import { initUser } from './../APIs'
+import { INIT_CITY_ID } from '../Constants';
 
 const BASE_WIDTH = Dimensions.get('window').width
 const BASE_HEIGHT = Dimensions.get('window').height
@@ -17,10 +19,18 @@ class InitScreen extends Component {
         }
     }
 
+    onPressCallback = async () => {
+        await initUser(INIT_CITY_ID);
+        this.props.navigation.dispatch(StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'Timer' })]
+        }))
+    }
+
     render() {
         return (
             <View style={styles.container}>
-                <TimerHeader {...this.props} star={1} />
+                <TimerHeader {...this.props} star={0} />
                 <View style={styles.contentContainer}>
                     <Text style={styles.titleText}>Choose a city</Text>
                     <Text style={styles.contentText}>Let's decide where you journey begin</Text>
@@ -42,28 +52,22 @@ class InitScreen extends Component {
                     <Button
                         buttonStyle={styles.button}
                         titleStyle={styles.btnFont}
-                        title="CHOOSE ATLANTA"
+                        title="CHOOSE ATLANTA "
                         icon={
                             <Icon
                                 name="map-marker"
-                                size={15}
+                                size={20}
                                 color="white"
                             />
                         }
                         iconRight
-                        onPress={() => this.props.navigation.dispatch(StackActions.reset({
-                            index: 0,
-                            actions: [NavigationActions.navigate({ routeName: 'Timer' })]
-                        })) }
+                        onPress={this.onPressCallback}
                         />
                     <Button
                         buttonStyle={styles.button}
                         titleStyle={styles.btnFont}
                         title="SURPRISE ME"
-                        onPress={() => this.props.navigation.dispatch(StackActions.reset({
-                            index: 0,
-                            actions: [NavigationActions.navigate({ routeName: 'Timer' })]
-                        })) }
+                        onPress={this.onPressCallback}
                     />
                 </View>
             </View>

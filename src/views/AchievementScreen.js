@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity, Modal, FlatList, StyleSheet, Dimen
 import { Card } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import MyHeader from './../components/MyHeader'
+import { getFriendList, getAchievementList, addAchievement } from './../APIs'
 
 const BASE_WIDTH = Dimensions.get('window').width
 const BASE_HEIGHT = Dimensions.get('window').height
@@ -15,31 +16,7 @@ class AchievementScreen extends Component {
             title: 'Achievement',
             modalVisible: false,
             list:[
-                {
-                    img: 'https://s3.amazonaws.com/beauty-images/fox.png',
-                    name: 'Atlanta',
-                    date: 'Mar.12th,2019'
-                },
-                {
-                    img: 'https://s3.amazonaws.com/beauty-images/fox.png',
-                    name: 'New York',
-                    date: 'Feb.10th,2019'
-                },
-                {
-                    img: 'https://s3.amazonaws.com/beauty-images/fox.png',
-                    name: 'Seattle',
-                    date: 'Oct.17th,2018'
-                },
-                {
-                    img: 'https://s3.amazonaws.com/beauty-images/fox.png',
-                    name: 'Los Angeles',
-                    date: 'Apr.26th,2018'
-                },
-                {
-                    img: 'https://s3.amazonaws.com/beauty-images/fox.png',
-                    name: 'San Francisco',
-                    date: 'Jan.15th,2018'
-                }
+
             ],
             modalImage: 'https://s3.amazonaws.com/beauty-images/fox.png',
             modalCity: 'Atlanta',
@@ -48,8 +25,34 @@ class AchievementScreen extends Component {
         }
     }
 
+    componentDidMount = async () => {
+        this._fetchData()
+        this.willFocus = this.props.navigation.addListener(
+            'didFocus',
+            () => {
+                this._fetchData();
+            }
+        )
+    }
+
+    _fetchData = async () => {
+        await addAchievement('be9af5e2-3b78-46e0-b379-80ba1e4ce0dd');
+        let achievements = await getAchievementList();
+        console.log(achievements);
+        let list = achievements.map(achievement => {
+            let newAchievement = {};
+            newAchievement['img'] = achievement['image'];
+            newAchievement['name'] = achievement['cityName'];
+            newAchievement['date'] = achievement['achieveTime'];
+            return newAchievement;
+        });
+        this.setState({
+            list: list
+        });
+    }
+
     setModalVisible(visible, key) {
-        if (key) {
+        if (key !== undefined) {
             this.setState({
                 modalImage: this.state.list[key].img,
                 modalCity: this.state.list[key].name,
@@ -90,7 +93,7 @@ class AchievementScreen extends Component {
         return (
             <View style={styles.container}>
                 <MyHeader {...this.props} title={this.state.title} />
-                <Modal  
+                <Modal
                     animationType={'fade'}
                     transparent={true}
                     visible={this.state.modalVisible}
@@ -103,9 +106,9 @@ class AchievementScreen extends Component {
                                 <Icon name='share-alt' size={25} color={'#000'} onPress={() => {this.sharePost()}} />
                             </View>
                             <View style={styles.image}>
-                                <Image 
-                                    source={{uri: this.state.modalImage}} 
-                                    resizeMode={'strech'} 
+                                <Image
+                                    source={{uri: this.state.modalImage}}
+                                    resizeMode={'strech'}
                                     style={{width: BASE_WIDTH - 90, height: BASE_HEIGHT - 240}}
                                 />
                             </View>
@@ -115,17 +118,17 @@ class AchievementScreen extends Component {
                         </View>
                     </View>
                 </Modal>
-                <FlatList 
+                <FlatList
                     style={{marginBottom:10}}
                     numColumns={2}
                     data={this.state.list}
-                    renderItem={({item, index})=> 
+                    renderItem={({item, index})=>
                         {
                             return (
                                 <TouchableOpacity style={styles.cardContainer} activeOpacity={0.6} onPress={()=> {this.setModalVisible(true, index)}}>
-                                    <Card 
+                                    <Card
                                         image={{uri: item.img}}
-                                        imageProps={{resizeMode: "strech"}} 
+                                        imageProps={{resizeMode: "strech"}}
                                         imageStyle={{height: BASE_HEIGHT / 3.5}}
                                     >
                                         <View style={styles.textGroup}>
@@ -141,7 +144,7 @@ class AchievementScreen extends Component {
                     }
                 />
             </View>
-        ) 
+        )
     }
 }
 
@@ -168,12 +171,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF'
     },
     iconGroup: {
-        flexDirection:'row', 
+        flexDirection:'row',
         justifyContent: "space-between",
         padding: 15
     },
     image: {
-        flexDirection:'row', 
+        flexDirection:'row',
         justifyContent: 'center'
     },
     title: {
