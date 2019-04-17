@@ -42,11 +42,7 @@ export const defaultMapRegion = {
 }
 
 export const now = () => {
-<<<<<<< HEAD
     return new Date().toLocaleString();
-=======
-    new Date().toLocaleString();
->>>>>>> e27f32f7bf2a6ed2752eb98a0729dbb8b1a4c66e
 }
 
 // given cities return the region in the map to display them
@@ -97,10 +93,7 @@ export const endpoints = {
     VISITEDCITY_GET_LIST: '/visitedCity/:userId',
     CITY_GET_SINGLE: '/city/object/:cityId',
     CITY_GET_LIST: '/city/:cityId',
-<<<<<<< HEAD
     CITY_POST: '/city',
-=======
->>>>>>> e27f32f7bf2a6ed2752eb98a0729dbb8b1a4c66e
     INFO_GET_SINGLE: '/info/object/:userId',
     INFO_POST: '/info',
     USER_SEARCH: '/user/:username',
@@ -110,7 +103,6 @@ export const endpoints = {
     FRIENDSHIP_POST: '/friendship',
     FRIENDREQUEST_POST: '/friendrequest',
     FRIENDREQUEST_GET_LIST: '/friendrequest/:userId'
-<<<<<<< HEAD
 }
 
 // the id of the starting city
@@ -137,6 +129,4 @@ export const getAvatar = (userId) => {
 
     let hashed = hashCode(userId);
     return images[Math.floor(hashed / images.length)]
-=======
->>>>>>> e27f32f7bf2a6ed2752eb98a0729dbb8b1a4c66e
 }
