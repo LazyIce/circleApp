@@ -1,0 +1,14 @@
+{
+    "providers": {
+        "awscloudformation": {
+            "AuthRoleName": "circlepp-20190327141910-authRole",
+            "UnauthRoleArn": "arn:aws:iam::211922508968:role/circlepp-20190327141910-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::211922508968:role/circlepp-20190327141910-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "circlepp-20190327141910-deployment",
+            "UnauthRoleName": "circlepp-20190327141910-unauthRole",
+            "StackName": "circlepp-20190327141910",
+            "StackId": "arn:aws:cloudformation:us-east-1:211922508968:stack/circlepp-20190327141910/d1a25020-50bc-11e9-a94a-0aa1af63e98c"
+        }
+    }
+}

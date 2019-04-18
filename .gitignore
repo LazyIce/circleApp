@@ -2,9 +2,6 @@ amplify/
 build/
 dist/
 node_modules/
-aws-exports.js
-awsconfiguration.json
-.amplifyrc
 
 #amplify
 amplify/\#current-cloud-backend
@@ -14,5 +11,4 @@ amplify/backend/awscloudformation
 build/
 dist/
 node_modules/
-aws-exports.js
 awsconfiguration.json
